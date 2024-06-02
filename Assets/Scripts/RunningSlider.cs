@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class RunningSlider : MonoBehaviour
 {
@@ -17,9 +18,14 @@ public class RunningSlider : MonoBehaviour
     private const float TIMEINCREMENTS = 1f;
     //How much the slider speed increases by
     private const float SPEEDINCREASE = 0.001f;
+    //The range of the slider that the target can be in to speed up
+    private float targetRange;
 
-    //The target position of the slider. 1f is at the top and 0f is at the bottom
+    //The target on the slider
     public GameObject Target;
+    private float sliderHeight;
+    private float targetHeight;
+    private float targetPosition = 0.8f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,24 +40,28 @@ public class RunningSlider : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
+        //Height of the slider
+        sliderHeight = GetComponent<RectTransform>().rect.height;
+        //Height of the target
+        targetHeight = Target.GetComponent<RectTransform>().rect.height;
+        //Getting the range of the slider that the target covers
+        targetRange = targetHeight / sliderHeight;
+        Debug.Log(targetRange);
         placeTarget(.8f); //Hardcoding for now
         StartCoroutine(Movement());
         StartCoroutine(IncreaseSpeed());
     }
 
-    private void placeTarget(float targetPos)
+    //Placing the target on the slider
+    private void placeTarget(float target)
     {
-        //Height of the slider
-        float height = GetComponent<RectTransform>().rect.height;
-        //Height of the target
-        float targetHeight = Target.GetComponent<RectTransform>().rect.height;
-
+        targetPosition = target;
         //This removes the height of the target so it doesn't go halfway off the slider
-        height -= targetHeight;
+        float adjHeight = sliderHeight - targetHeight;
         //To get the position I need to multiply the target position by the height of the slider so that I get the scale along it
         //and then subtract the height of the slider divided by 2 because half of the slider is in negative numbers (100 length slider is from 50 to -50)
 
-        float position = (targetPos * height) - height / 2;
+        float position = (targetPosition * adjHeight) - adjHeight / 2;
 
         // Set the targets position
         Target.transform.localPosition = new Vector3(Target.transform.localPosition.x, position, Target.transform.localPosition.z);
@@ -67,7 +77,6 @@ public class RunningSlider : MonoBehaviour
         {
             yield return new WaitForSeconds(TIMEINCREMENTS);
             sliderSpeed += SPEEDINCREASE;
-            Debug.Log(sliderSpeed);
         } while (true);
     }
 
@@ -79,7 +88,6 @@ public class RunningSlider : MonoBehaviour
     {
         do
         {
-            placeTarget();
             if (increasing)
             {
                 slider.value += sliderSpeed;
@@ -100,8 +108,23 @@ public class RunningSlider : MonoBehaviour
         } while (true);
     }
 
-    public void RunningInteract()
+    /// <summary>
+    /// Called when the interact key is hit
+    /// </summary>
+    public void RunningInteract(InputAction.CallbackContext context)
     {
-        
+        Debug.Log("Interact");
+        //Gettingthe low and high ends of the target
+        float low = targetPosition - targetRange / 2;
+        float high = targetPosition + targetRange / 2;
+
+        if (slider.value >= low && slider.value <= high)
+        {
+            Debug.Log("Yes");
+        }
+        else
+        {
+            Debug.Log("No");
+        }
     }
 }
