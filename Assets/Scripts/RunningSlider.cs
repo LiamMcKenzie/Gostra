@@ -113,18 +113,22 @@ public class RunningSlider : MonoBehaviour
     /// </summary>
     public void RunningInteract(InputAction.CallbackContext context)
     {
-        Debug.Log("Interact");
+        //This is so it doesn't call it multiple times when the key is pressed
+        if (!context.performed)
+        {
+            return;
+        }
         //Gettingthe low and high ends of the target
         float low = targetPosition - targetRange / 2;
         float high = targetPosition + targetRange / 2;
 
         if (slider.value >= low && slider.value <= high)
         {
-            Debug.Log("Yes");
+            Debug.Log("Succeed: " + slider.value);
         }
         else
         {
-            Debug.Log("No");
+            Debug.Log("Failed: " + slider.value);
         }
     }
 }
