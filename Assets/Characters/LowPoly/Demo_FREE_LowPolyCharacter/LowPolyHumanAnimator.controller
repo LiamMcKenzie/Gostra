@@ -73,7 +73,7 @@ AnimatorStateMachine:
     m_Position: {x: 457.7059, y: 315.64703, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7171801064352185101}
-    m_Position: {x: 360, y: 210, z: 0}
+    m_Position: {x: 350, y: 210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -93,8 +93,8 @@ AnimatorController:
   m_Name: LowPolyHumanAnimator
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Blend
-    m_Type: 1
+  - m_Name: Falling
+    m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0

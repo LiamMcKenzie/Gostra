@@ -34,9 +34,11 @@ public class PlayerAnimator : MonoBehaviour
             if(playerRotation > fallThreshold || playerRotation < -fallThreshold) 
             {
                 isFalling = true;
-                ragdoll.isRagdoll(isFalling); //enable the ragdoll
+                
                 //animator.enabled = false; //disable the animator component. which causes the player to become a ragdoll
             }
         }
+
+        ragdoll.isRagdoll(isFalling); //enable/disable the ragdoll
     }
 }
