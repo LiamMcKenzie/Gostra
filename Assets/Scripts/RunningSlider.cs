@@ -1,3 +1,8 @@
+/// <remarks>
+/// Author: Palin Wiseman
+/// Date Created: May 31, 2024
+/// Bugs: None known at this time.
+/// </remarks>
 /// <summary>
 /// Code for the running meter
 /// </summary>
@@ -73,6 +78,7 @@ public class RunningSlider : MonoBehaviour
     /// <returns></returns>
     private IEnumerator IncreaseSpeed()
     {
+        //TODO: Rework this into increasing based on position on the pole rather than time
         do
         {
             yield return new WaitForSeconds(TIMEINCREMENTS);
@@ -124,10 +130,12 @@ public class RunningSlider : MonoBehaviour
 
         if (slider.value >= low && slider.value <= high)
         {
+            //TODO: Increase movement speed
             Debug.Log("Succeed: " + slider.value);
         }
         else
         {
+            //TODO: Increase movement speed
             Debug.Log("Failed: " + slider.value);
         }
     }
