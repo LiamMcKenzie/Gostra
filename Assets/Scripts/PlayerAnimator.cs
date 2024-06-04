@@ -26,7 +26,8 @@ public class PlayerAnimator : MonoBehaviour
         if(isFalling == false)
         {
             playerRotation = Mathf.Clamp(playerRotation, -maxRotation, maxRotation); //this makes sure the player rotation is between -1 and 1
-            transform.localRotation = Quaternion.Euler(0, 0, playerRotation * -maxRotation); //this rotates the player based on the playerRotation value
+            Quaternion rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, playerRotation * -maxRotation);
+            transform.localRotation = rotation; //this rotates the player based on the playerRotation value
         }
 
         if(Application.isPlaying && isFalling == false)
