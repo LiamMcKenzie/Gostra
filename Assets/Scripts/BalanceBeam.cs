@@ -21,9 +21,19 @@ public class BalanceBeam : MonoBehaviour
     //Transform of the handle
     private RectTransform handleRect; 
     //This is the value of the slider scaled to be between -1 and 1
-    [HideInInspector] public float sliderValue;
+    private float sliderValue;
+    //Public getter for the balancing script
+    public float SliderValue
+    {
+        get { return sliderValue; }
+    }
     //Set to true when the user is on the pole
-    public bool onPole;
+    private bool onPole;
+    //Public setter for being on the pole
+    public bool OnPole
+    {
+        set { onPole = value; }
+    }
     //If the slider is already moving
     private bool moving;
     //Set this to true to stop the slider from moving
@@ -34,9 +44,13 @@ public class BalanceBeam : MonoBehaviour
     //Where the slider is trying to move to
     private float target;
     //If the player has slipped off
-    [HideInInspector] public bool slipped;
+    private bool slipped;
+    public bool Slipped
+    {
+        get { return slipped; }
+    }
     //Temporary text display for slipping off
-    public GameObject slipText;
+    [SerializeField]private GameObject slipText;
 
     private void Start()
     {
@@ -130,5 +144,4 @@ public class BalanceBeam : MonoBehaviour
             StartCoroutine(SliderMove());
         }
     }
-
 }
