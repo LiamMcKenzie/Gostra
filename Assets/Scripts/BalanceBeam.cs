@@ -16,22 +16,25 @@ using UnityEngine.InputSystem;
 [ExecuteInEditMode]
 public class BalanceBeam : MonoBehaviour
 {
-    public Slider slider; // Reference to the Slider component
+    private Slider slider; // Reference to the Slider component
     public RectTransform handleRect; // Reference to the handle RectTransform
 
     //This is the value of the slider scaled to be between -1 and 1
     [Range(-1, 1)]
     public float sliderValue;
     //Set to true when the user is on the pole
-    public bool onPole = false;
+    public bool onPole;
     //If the slider is already moving
-    private bool moving = false;
+    private bool moving;
     //Set this to true to stop the slider from moving
-    private bool stopped = false;
+    private bool stopped;
     //Speed of slider movement
     private float speed = 1f;
     private System.Random rand = new System.Random();
+    //Where the slider is trying to move to
     private float target;
+    //If the player has slipped off
+    public bool slipped;
 
     private void Start()
     {
@@ -40,6 +43,10 @@ public class BalanceBeam : MonoBehaviour
         slider.onValueChanged.AddListener(OnSliderValueChanged);
         sliderValue = 0;
         slider.value = 0.5f;
+        onPole = false;
+        moving = false;
+        stopped = false;
+        slipped = false;
         StartCoroutine(Slipping());
     }
 
@@ -62,7 +69,7 @@ public class BalanceBeam : MonoBehaviour
 
     private IEnumerator Slipping()
     {
-        while(true)
+        while(!slipped)
         {
             //Check if the user is on the pole there isn't already a slidermove coroutine running
             if(onPole && !moving)
@@ -84,11 +91,19 @@ public class BalanceBeam : MonoBehaviour
     private IEnumerator SliderMove()
     {
         moving = true;
-        Debug.Log("Moving slider at" + slider.value + " to " + target);
         while(slider.value != target)
         {
-            Debug.Log(target);
             slider.value = Mathf.MoveTowards(slider.value, target, speed * Time.deltaTime);
+            if(slider.value < .1f)
+            {
+                slipped = true;
+                target = 0f;
+            }
+            else if (slider.value > .9f)
+            {
+                slipped = true;
+                target = 1f;
+            }
             yield return null;
         }
         moving = false;
@@ -96,7 +111,7 @@ public class BalanceBeam : MonoBehaviour
 
     public void moveSlider(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!context.performed || slipped)
         {
             return;
         }        
