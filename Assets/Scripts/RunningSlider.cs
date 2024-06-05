@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class RunningSlider : MonoBehaviour
 {
@@ -22,15 +23,25 @@ public class RunningSlider : MonoBehaviour
     //How often the slider speed increases in seconds
     private const float TIMEINCREMENTS = 1f;
     //How much the slider speed increases by
-    private const float SPEEDINCREASE = 0.001f;
+    private const float SLIDERSPEEDINCREASE = 0.001f;
+    //These two just have temporary values in them. Not sure what movement speed we will be wanting.
+    private const float STARTINGMOVEMENTSPEED = 1f;
+    private const float MOVEMENTSPEEDCHANGE = 1f;
     //The range of the slider that the target can be in to speed up
     private float targetRange;
-
     //The target on the slider
-    public GameObject Target;
+    [SerializeField]private GameObject Target;
     private float sliderHeight;
     private float targetHeight;
     private float targetPosition = 0.8f;
+    //Movement speed of the player
+    private float movementSpeed;
+    //Public getter as the player script will need to know the movement speed
+    public float MovementSpeed
+    {
+        get { return movementSpeed; }
+    }
+    [SerializeField] private TextMeshProUGUI resultText;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +62,8 @@ public class RunningSlider : MonoBehaviour
         targetHeight = Target.GetComponent<RectTransform>().rect.height;
         //Getting the range of the slider that the target covers
         targetRange = targetHeight / sliderHeight;
-        Debug.Log(targetRange);
+        movementSpeed = STARTINGMOVEMENTSPEED;
+        resultText.text = "Movement Speed: " + movementSpeed;
         placeTarget(.8f); //Hardcoding for now
         StartCoroutine(Movement());
         StartCoroutine(IncreaseSpeed());
@@ -82,7 +94,7 @@ public class RunningSlider : MonoBehaviour
         do
         {
             yield return new WaitForSeconds(TIMEINCREMENTS);
-            sliderSpeed += SPEEDINCREASE;
+            sliderSpeed += SLIDERSPEEDINCREASE;
         } while (true);
     }
 
@@ -99,6 +111,12 @@ public class RunningSlider : MonoBehaviour
                 slider.value += sliderSpeed;
                 if (slider.value >= 1)
                 {
+                    movementSpeed -= MOVEMENTSPEEDCHANGE;
+                    if (movementSpeed < 0)
+                    {
+                        movementSpeed = 0;
+                    }
+                    resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
                     increasing = false;
                 }
             }
@@ -120,23 +138,27 @@ public class RunningSlider : MonoBehaviour
     public void RunningInteract(InputAction.CallbackContext context)
     {
         //This is so it doesn't call it multiple times when the key is pressed
-        if (!context.performed)
+        if (!context.performed || !increasing)
         {
             return;
         }
         //Gettingthe low and high ends of the target
         float low = targetPosition - targetRange / 2;
         float high = targetPosition + targetRange / 2;
-
+        increasing = false;
         if (slider.value >= low && slider.value <= high)
         {
-            //TODO: Increase movement speed
-            Debug.Log("Succeed: " + slider.value);
+            movementSpeed += MOVEMENTSPEEDCHANGE;
+            resultText.text = "Success! \n Movement Speed: " + movementSpeed;
         }
         else
         {
-            //TODO: Increase movement speed
-            Debug.Log("Failed: " + slider.value);
+            movementSpeed -= MOVEMENTSPEEDCHANGE;
+            if (movementSpeed < 0)
+            {
+                movementSpeed = 0;
+            }
+            resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
         }
     }
 }
