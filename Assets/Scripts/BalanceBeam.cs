@@ -16,12 +16,12 @@ using UnityEngine.InputSystem;
 [ExecuteInEditMode]
 public class BalanceBeam : MonoBehaviour
 {
-    private Slider slider; // Reference to the Slider component
-    public RectTransform handleRect; // Reference to the handle RectTransform
-
+    //The slider attached to this gameobject
+    private Slider slider;
+    //Transform of the handle
+    private RectTransform handleRect; 
     //This is the value of the slider scaled to be between -1 and 1
-    [Range(-1, 1)]
-    public float sliderValue;
+    [HideInInspector] public float sliderValue;
     //Set to true when the user is on the pole
     public bool onPole;
     //If the slider is already moving
@@ -34,7 +34,9 @@ public class BalanceBeam : MonoBehaviour
     //Where the slider is trying to move to
     private float target;
     //If the player has slipped off
-    public bool slipped;
+    [HideInInspector] public bool slipped;
+    //Temporary text display for slipping off
+    public GameObject slipText;
 
     private void Start()
     {
@@ -94,22 +96,22 @@ public class BalanceBeam : MonoBehaviour
         while(slider.value != target)
         {
             slider.value = Mathf.MoveTowards(slider.value, target, speed * Time.deltaTime);
-            if(slider.value < .1f)
+            if(slider.value < .1f || slider.value > .9f)
             {
                 slipped = true;
-                target = 0f;
-            }
-            else if (slider.value > .9f)
-            {
-                slipped = true;
-                target = 1f;
+                slipText.SetActive(true);
+                //Round slider value to the nearest whole number (0 or 1)
+                slider.value = Mathf.Round(slider.value);
             }
             yield return null;
         }
         moving = false;
     }
 
-    public void moveSlider(InputAction.CallbackContext context)
+    /// <summary>
+    /// Called by the input system movement action
+    /// </summary>
+    public void PlayerBalancing(InputAction.CallbackContext context)
     {
         if (!context.performed || slipped)
         {
