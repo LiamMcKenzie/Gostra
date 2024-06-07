@@ -39,10 +39,12 @@ public class BalanceBeam : MonoBehaviour
             OnRotation(value);
         }
     }
+    private bool onPole;
     //Public setter for being on the pole
     public bool OnPole
     {
-        set { 
+        set {
+            onPole = value;
             if (value)
             {
                 StartCoroutine(Balancing());
@@ -52,7 +54,7 @@ public class BalanceBeam : MonoBehaviour
     //Speed of slider movement
     private float speed;
     //Starting speed
-    private const float START_SPEED = .5f;
+    private const float START_SPEED = .3f;
     //Speed increase value
     private const float SPEED_INCREASE = .1f;
     private System.Random rand = new System.Random();
@@ -82,6 +84,10 @@ public class BalanceBeam : MonoBehaviour
                 direction = value;
             }
     }
+    //The place the player has just hit the button to move to
+    private float playerTarget;
+    //If the movement is being controlled by the player
+    private bool playerMovement;
 
     private void Start()
     {
@@ -104,30 +110,57 @@ public class BalanceBeam : MonoBehaviour
     {
         while(!slipped)
         {
-            switch (Rotation)
+            //If the player just hit a button it briefly grabs the movement and goes in that direction until it reaches the player set target then goes back to the natural slipping direction
+            if (playerMovement)
             {
-                //If the rotation is leaning left or right then set the direction that way as well 
-                case < 0:
-                    Direction = Direction.Left;
-                    break;
-                case > 0:
-                    Direction = Direction.Right;
-                    break;
-                default:
-                    //If it is exactly in the middle pick a random direction
-                    if (rand.Next(0, 2) == 0)
+                Direction PlayerDirection;
+                //If rotation isn't within 0.01 on either side of the target
+                if (Math.Abs(Rotation - playerTarget) > 0.01)
+                {
+                    if (Rotation < playerTarget)
                     {
-                        Direction = Direction.Left;
+                        PlayerDirection = Direction.Right;
                     }
                     else
                     {
-                        Direction = Direction.Right;
+                        PlayerDirection = Direction.Left;
                     }
-                    break;
+                    //This uses an increased movement speed so the movement isn't jerky but it also doesn't take too long to get to the target
+                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed+1) * Time.deltaTime);
+                }
+                //Otherwise it goes back to the natural slipping direction
+                else
+                {
+                    playerMovement = false;
+                }
             }
-            //Rotates it towards the direction the player is leaning
+            else
+            {
+                switch (Rotation)
+                {
+                    //If the rotation is leaning left or right then set the direction that way as well 
+                    case < 0:
+                        Direction = Direction.Left;
+                        break;
+                    case > 0:
+                        Direction = Direction.Right;
+                        break;
+                    default:
+                        //If it is exactly in the middle pick a random direction
+                        if (rand.Next(0, 2) == 0)
+                        {
+                            Direction = Direction.Left;
+                        }
+                        else
+                        {
+                            Direction = Direction.Right;
+                        }
+                        break;
+                }
+                Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.deltaTime);
+            }
+            //Rotates it towards the direction the player is leaning (or just hit a button for)
             //It is using move towards so it moves smoothly
-            Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.deltaTime);
             //If the gauge is in the red then the player has slipped
             if(Rotation < -.8f || Rotation > .8f)
             {
@@ -145,20 +178,23 @@ public class BalanceBeam : MonoBehaviour
     /// </summary>
     public void PlayerBalancing(InputAction.CallbackContext context)
     {
-        if (!context.performed || slipped)
+        //If the player has slipped, isn't on the pole yet, or is already moving then you can't move
+        if (!context.performed || slipped || playerMovement || !onPole)
         {
             return;
         }
-        //Change by a random number between 0.1 and 0.3
-        //Calculation from GitHub Copilot
+        //Change by a random number between 0.1 and 0.2
+        //Calculation from copilot
         float change = (float)rand.NextDouble() * 0.2f + 0.1f;
+        //Sets the playerTarget to the randomized number
         if(context.ReadValue<Vector2>().x > 0)
         {
-            Rotation = Rotation - change;
+            playerTarget = Rotation - change;
         }
         else
         {
-            Rotation = Rotation + change;
+            playerTarget = Rotation + change;
         }
+        playerMovement = true;
     }
 }
