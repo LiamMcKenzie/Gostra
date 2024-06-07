@@ -1,3 +1,12 @@
+/// <remarks>
+/// Author: Johnathan
+/// Date Created: 7/6/2024
+/// Contributors: Assisted by Github Copilot
+/// </remarks>
+// <summary>
+/// This class manages the UI elements in the game.
+/// </summary>
+
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
