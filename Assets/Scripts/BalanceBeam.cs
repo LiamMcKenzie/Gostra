@@ -13,113 +13,131 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.InputSystem;
 
-[ExecuteInEditMode]
+//Enum for the side of the balance meter the arrow is on and where the slider will be moving to
+public enum Direction
+{
+    Left = -1,
+    Right = 1
+}
+
+/// <summary>
+/// Class for dealing with the balance meter
+/// </summary>
 public class BalanceBeam : MonoBehaviour
 {
-    //The slider attached to this gameobject
-    private Slider slider;
     //Transform of the handle
-    private RectTransform handleRect; 
-    //This is the value of the slider scaled to be between -1 and 1
-    private float sliderValue;
-    //Public getter for the balancing script
-    public float SliderValue
+    [SerializeField]private RectTransform handleRect; 
+    //This is the value of the current rotation between -1 and 1
+    private float rotation;
+    //Public getter and setter for rotation
+    public float Rotation
     {
-        get { return sliderValue; }
+        get { return rotation; }
+        set 
+        {
+            rotation = value;
+            OnRotation(value);
+        }
     }
-    //Set to true when the user is on the pole
-    private bool onPole;
     //Public setter for being on the pole
     public bool OnPole
     {
-        set { onPole = value; }
+        set { 
+            if (value)
+            {
+                StartCoroutine(Balancing());
+            }
+        }
     }
-    //If the slider is already moving
-    private bool moving;
-    //Set this to true to stop the slider from moving
-    private bool stopped;
     //Speed of slider movement
-    private float speed = 1f;
+    private float speed;
+    //Starting speed
+    private const float START_SPEED = .5f;
+    //Speed increase value
+    private const float SPEED_INCREASE = .1f;
     private System.Random rand = new System.Random();
     //Where the slider is trying to move to
     private float target;
     //If the player has slipped off
     private bool slipped;
+    //Public getter for slipped. Will be used for the animations
     public bool Slipped
     {
         get { return slipped; }
+        set { slipped = value; }
     }
     //Temporary text display for slipping off
     [SerializeField]private GameObject slipText;
+    //The current direction that the player is leaning
+    private Direction direction;
+    public Direction Direction
+    {
+        get { return direction; }
+        set {
+            //If the player is leaning in a different direction increase the speed
+                if (value != direction)
+                {
+                    speed += SPEED_INCREASE;
+                }
+                direction = value;
+            }
+    }
 
     private void Start()
     {
-        slider = GetComponent<Slider>();
-        handleRect = slider.handleRect;
-        slider.onValueChanged.AddListener(OnSliderValueChanged);
-        sliderValue = 0;
-        slider.value = 0.5f;
-        onPole = false;
-        moving = false;
-        stopped = false;
+        Rotation = 0;
+        speed = START_SPEED;
         slipped = false;
-        StartCoroutine(Slipping());
     }
 
-    private void OnSliderValueChanged(float value)
+    private void OnRotation(float value)
     {
-        // Calculate the rotation angle based on the slider's value
-        float angle = value * -70f;
-
-        // Apply the rotation to the handle
-        handleRect.localRotation = Quaternion.Euler(0, 0, angle);
-
-        //Scaling the value to be between -1 and 1
-        sliderValue = (value - 0.5f) * 2;
-    }
-
-    private void OnDestroy()
-    {
-        slider.onValueChanged.RemoveListener(OnSliderValueChanged);
-    }
-
-    private IEnumerator Slipping()
-    {
-        while(!slipped)
-        {
-            //Check if the user is on the pole there isn't already a slidermove coroutine running
-            if(onPole && !moving)
-            {
-                //Getting a random float between -.3 and .3. This is ugly but idk how else to do it atm
-                float randFloat = (float)rand.Next(-30, 30) * .01f;
-                float newValue = slider.value + randFloat;
-                target = Mathf.Clamp(newValue, 0, 1);
-                StartCoroutine(SliderMove());
-            }
-            yield return new WaitForSeconds((float)rand.Next(0, 20)*.01f); //Getting a random float between 0 and 2
-        }
+        //Apply the rotation to the handle
+        handleRect.localRotation = Quaternion.Euler(0, 0, value * 35);
     }
 
     /// <summary>
-    /// Smoothly moves the slider to the target value
+    /// Smoothly moves the slider towards the targeted side
     /// </summary>
     /// <param name="target">The target value</param>
-    private IEnumerator SliderMove()
+    private IEnumerator Balancing()
     {
-        moving = true;
-        while(slider.value != target)
+        while(!slipped)
         {
-            slider.value = Mathf.MoveTowards(slider.value, target, speed * Time.deltaTime);
-            if(slider.value < .1f || slider.value > .9f)
+            switch (Rotation)
+            {
+                //If the rotation is leaning left or right then set the direction that way as well 
+                case < 0:
+                    Direction = Direction.Left;
+                    break;
+                case > 0:
+                    Direction = Direction.Right;
+                    break;
+                default:
+                    //If it is exactly in the middle pick a random direction
+                    if (rand.Next(0, 2) == 0)
+                    {
+                        Direction = Direction.Left;
+                    }
+                    else
+                    {
+                        Direction = Direction.Right;
+                    }
+                    break;
+            }
+            //Rotates it towards the direction the player is leaning
+            //It is using move towards so it moves smoothly
+            Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.deltaTime);
+            //If the gauge is in the red then the player has slipped
+            if(Rotation < -.8f || Rotation > .8f)
             {
                 slipped = true;
                 slipText.SetActive(true);
-                //Round slider value to the nearest whole number (0 or 1)
-                slider.value = Mathf.Round(slider.value);
+                //Round rotation to the nearest whole number (-1 or 1)
+                Rotation = Mathf.Round(Rotation);
             }
             yield return null;
         }
-        moving = false;
     }
 
     /// <summary>
@@ -130,18 +148,17 @@ public class BalanceBeam : MonoBehaviour
         if (!context.performed || slipped)
         {
             return;
-        }        
+        }
+        //Change by a random number between 0.1 and 0.3
+        //Calculation from GitHub Copilot
+        float change = (float)rand.NextDouble() * 0.2f + 0.1f;
         if(context.ReadValue<Vector2>().x > 0)
         {
-            target = slider.value + 0.1f;
+            Rotation = Rotation - change;
         }
         else
         {
-            target = slider.value - 0.1f;
-        }
-        if (!moving)
-        {
-            StartCoroutine(SliderMove());
+            Rotation = Rotation + change;
         }
     }
 }
