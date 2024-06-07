@@ -412,6 +412,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 259266571336357278, guid: 844f4aa57f3c349118ff953ee4f2c345,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2048833524149457610, guid: 844f4aa57f3c349118ff953ee4f2c345,
         type: 3}
       propertyPath: fallThreshold
@@ -1195,7 +1200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1398360485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1493,8 +1498,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spline: {fileID: 1205385907}
-  <Speed>k__BackingField: 4
   rotationSpeed: 5
+  <Speed>k__BackingField: 4
 --- !u!114 &1751727685
 MonoBehaviour:
   m_ObjectHideFlags: 0
