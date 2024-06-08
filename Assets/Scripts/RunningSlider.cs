@@ -15,11 +15,12 @@ using TMPro;
 
 public class RunningSlider : MonoBehaviour
 {
+    [SerializeField] private PlayerController player;
     private Slider slider;
     //If the slider is increasing or decreasing
     private bool increasing = true;
     //The starting slider speed. Current slider speed is also kept in this variable
-    private float sliderSpeed = 0.01f;
+    [SerializeField] private float sliderSpeed = 0.01f;
     //How often the slider speed increases in seconds
     private const float TIME_INCREMENTS = 1f;
     //How much the slider speed increases by
@@ -30,7 +31,7 @@ public class RunningSlider : MonoBehaviour
     //The range of the slider that the target can be in to speed up
     private float targetRange;
     //The target on the slider
-    [SerializeField]private GameObject Target;
+    [SerializeField] private GameObject Target;
     private float sliderHeight;
     private float targetHeight;
     private float targetPosition;
@@ -148,11 +149,24 @@ public class RunningSlider : MonoBehaviour
         increasing = false;
         if (slider.value >= low && slider.value <= high)
         {
+            if (player != null)
+            {
+                if (player.IsIdle)
+                {
+                    player.Run();
+                }
+
+                player.Speed += MOVEMENT_SPEED_CHANGE;
+            }
             movementSpeed += MOVEMENT_SPEED_CHANGE;
             resultText.text = "Success! \n Movement Speed: " + movementSpeed;
         }
         else
         {
+            if (player != null && player.IsIdle)
+            {
+                player.Fall();
+            }
             movementSpeed -= MOVEMENT_SPEED_CHANGE;
             if (movementSpeed < 0)
             {
