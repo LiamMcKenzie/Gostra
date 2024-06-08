@@ -9,12 +9,13 @@
 
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject titleScreenPanel;
+    public bool isGameActive { get; private set; } = false;
 
     # region Singleton
-    public static UIManager Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
 
     private void Awake()
     {
