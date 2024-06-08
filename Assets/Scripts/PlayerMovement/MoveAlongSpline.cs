@@ -16,6 +16,7 @@ using UnityEngine.Splines;
 /// </summary>
 public class MoveAlongSpline : MonoBehaviour
 {
+    [SerializeField] private PlayerController player;
     [SerializeField] private SplineContainer spline;  // The spline to move along
     [SerializeField] private float rotationSpeed = 5f;  // The speed at which to rotate the object
 
@@ -23,12 +24,13 @@ public class MoveAlongSpline : MonoBehaviour
     private float startSpeed;   // The starting speed of the object
     private float splineLength; // The length of the spline
 
-    [field: SerializeField] public float Speed { get; set; } = 1f;  // The speed at which to move the object
+    //[field: SerializeField] public float Speed { get; set; } = 1f;  // The speed at which to move the object
 
     void Start()
     {
         splineLength = spline.CalculateLength();
-        startSpeed = Speed;
+        startSpeed = player.Speed;
+        ResetPosition();
     }
 
     void Update()
@@ -36,10 +38,10 @@ public class MoveAlongSpline : MonoBehaviour
         UpdatePosition();
         UpdateRotation();
 
-        // If the end of the spline is reached, set speed to zero, which in turn causes player to ragdoll
+        // If the end of the spline is reached
         if (currentDistance >= 1f)
         {
-            Speed = 0f;
+            //Speed = 0f;
         }
         else
         {
@@ -73,13 +75,13 @@ public class MoveAlongSpline : MonoBehaviour
         Vector3 targetPosition = spline.EvaluatePosition(currentDistance);
 
         // Move the character towards the target position on the spline
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, player.Speed * Time.deltaTime);
     }
 
     /// <summary>
     /// Calculates the movement of the object along the spline.
     /// </summary>
-    private float CalculateMovement() => Speed * Time.deltaTime / spline.CalculateLength();
+    private float CalculateMovement() => player.Speed * Time.deltaTime / spline.CalculateLength();
     
 
     /// <summary>
@@ -89,7 +91,7 @@ public class MoveAlongSpline : MonoBehaviour
     public void ResetPosition()
     {
         currentDistance = 0f;
-        Speed = startSpeed;
+        //Speed = startSpeed;
         transform.position = spline.EvaluatePosition(currentDistance);
     }
 }
