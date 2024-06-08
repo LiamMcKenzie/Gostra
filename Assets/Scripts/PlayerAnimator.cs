@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Splines;
 
 [ExecuteInEditMode] //this makes this script run in the editor
 public class PlayerAnimator : MonoBehaviour
@@ -16,16 +15,11 @@ public class PlayerAnimator : MonoBehaviour
     [Range(-1,1)]
     public float fallThreshold = 0.9f; //the amount the player has to rotate before falling 
 
-    [Range(0,3)]
-    public float speedThreshold = 0.3f; //the amount the player has to slow down to before falling
-
     public Ragdoll ragdoll;
 
     public bool isFalling = false;
 
     public Animator animator;
-
-    [SerializeField] private MoveAlongSpline moveAlongSpline;
 
     void Update()
     {
@@ -38,7 +32,7 @@ public class PlayerAnimator : MonoBehaviour
 
         if(Application.isPlaying && isFalling == false)
         {
-            if(playerRotation > fallThreshold || playerRotation < -fallThreshold || moveAlongSpline.Speed <= speedThreshold) 
+            if(playerRotation > fallThreshold || playerRotation < -fallThreshold) 
             {
                 isFalling = true;
                 
@@ -46,6 +40,6 @@ public class PlayerAnimator : MonoBehaviour
             }
         }
 
-        ragdoll.isRagdoll(isFalling);  //enable/disable the ragdoll
+        ragdoll.isRagdoll(isFalling); //enable/disable the ragdoll
     }
 }
