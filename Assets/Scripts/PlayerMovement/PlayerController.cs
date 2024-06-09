@@ -16,18 +16,16 @@ using UnityEngine.Events;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
-    public UnityEvent ReachedPoleEvent;
-    public UnityEvent PlayerFellEvent;
+    [HideInInspector] public UnityEvent ReachedPoleEvent;
+    [HideInInspector] public UnityEvent PlayerFellEvent;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private MoveAlongSpline moveAlongSpline;
 
-
     [Header("Speed")]
     [SerializeField] private float speedReductionFactor = 0.5f; // The factor to reduce speed by
     [field: SerializeField] public float Speed { get; set; } = 1f;  // The speed at which to move the object
-
 
     [Header("Rotation")]
     [SerializeField, Range(-1, 1)] public float playerRotation; //-1 and 1 are the limits for player rotation, if rotation is over 1 or less than -1 that means the player has fallen
@@ -62,6 +60,10 @@ public class PlayerController : MonoBehaviour
         CheckThresholds();   
     }
 
+    /// <summary>
+    /// Adjusts the player's rotation based on the input value
+    /// </summary>
+    /// <param name="playerRotation">The input value to adjust the player's rotation</param>
     public void RotatePlayer(float playerRotation)
     {
         this.playerRotation = playerRotation;
@@ -85,6 +87,9 @@ public class PlayerController : MonoBehaviour
         Speed = Mathf.Max(newSpeed, 0); // Ensure speed doesn't go below 0
     }
 
+    /// <summary>
+    /// Makes the player fall and disables the animator component
+    /// </summary>
     public void Fall()
     {
         Speed = 0f;
@@ -93,23 +98,32 @@ public class PlayerController : MonoBehaviour
         PlayerFellEvent.Invoke();
     }
 
+    /// <summary>
+    /// Makes the player run
+    /// </summary>
     public void Run()
     {
         IsIdle = false;
         animator.Play("Sprint");
     }
 
+    /// <summary>
+    /// Checks if the player has lost balance or speed
+    /// </summary>
     private void CheckThresholds()
     {
         bool lostBalance = playerRotation > fallThreshold || playerRotation < -fallThreshold;
         bool lostSpeed = Speed <= speedThreshold;
-
+        
         if (lostBalance || lostSpeed)
         {
             Fall();
         }
     }
 
+    /// <summary>
+    /// Resets the player's position and rotation
+    /// </summary>
     public void Reset()
     {
         IsIdle = true;

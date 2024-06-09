@@ -24,8 +24,6 @@ public class MoveAlongSpline : MonoBehaviour
     private float startSpeed;   // The starting speed of the object
     private float splineLength; // The length of the spline
 
-    //[field: SerializeField] public float Speed { get; set; } = 1f;  // The speed at which to move the object
-
     void Start()
     {
         splineLength = spline.CalculateLength();
@@ -35,13 +33,15 @@ public class MoveAlongSpline : MonoBehaviour
 
     void Update()
     {
+        if (player.IsIdle) { return; }
+        
         UpdatePosition();
         UpdateRotation();
 
         // If the end of the spline is reached
         if (currentDistance >= 1f)
         {
-            //Speed = 0f;
+            player.Fall();
         }
         else
         {
@@ -91,7 +91,6 @@ public class MoveAlongSpline : MonoBehaviour
     public void ResetPosition()
     {
         currentDistance = 0f;
-        //Speed = startSpeed;
         transform.position = spline.EvaluatePosition(currentDistance);
     }
 }
