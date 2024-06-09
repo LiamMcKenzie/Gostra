@@ -25,7 +25,6 @@ public enum Direction
 /// </summary>
 public class BalanceBeam : MonoBehaviour
 {
-    private Coroutine balanceCoroutine;
     [SerializeField] private PlayerController player;
     //Transform of the handle
     [SerializeField] private RectTransform handleRect;
@@ -92,6 +91,8 @@ public class BalanceBeam : MonoBehaviour
     private float playerTarget;
     //If the movement is being controlled by the player
     private bool playerMovement;
+    // declare the coroutine so it can be stopped -JGG
+    private Coroutine balanceCoroutine;
 
     private void Start()
     {
@@ -207,12 +208,18 @@ public class BalanceBeam : MonoBehaviour
         playerMovement = true;
     }
 
+    /// <summary>
+    /// Starts the balance beam
+    /// </summary>
     public void StartBalanceBeam()
     {     
         OnPole = true;
         balanceCoroutine = StartCoroutine(Balancing());
     }
 
+    /// <summary>
+    /// Stops the balance beam
+    /// </summary>
     public void StopBalanceBeam()
     {
         if (balanceCoroutine != null)
@@ -221,6 +228,9 @@ public class BalanceBeam : MonoBehaviour
         }
     }   
 
+    /// <summary>
+    /// Resets the balance beam
+    /// </summary>
     public void Reset()
     {
         OnPole = false;

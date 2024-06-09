@@ -45,6 +45,7 @@ public class RunningSlider : MonoBehaviour
     }
     [SerializeField] private TextMeshProUGUI resultText;
 
+    // Declare the coroutines so they can be stopped -JGG
     private Coroutine movementCoroutine;
     private Coroutine speedCoroutine;
 
