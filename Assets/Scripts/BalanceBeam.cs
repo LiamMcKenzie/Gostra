@@ -120,8 +120,8 @@ public class BalanceBeam : MonoBehaviour
             if (playerMovement)
             {
                 Direction PlayerDirection;
-                //If rotation isn't within 0.01 on either side of the target
-                if (Math.Abs(Rotation - playerTarget) > 0.01)
+                //If rotation isn't within 0.05 on either side of the target
+                if (Math.Abs(Rotation - playerTarget) > 0.05)
                 {
                     if (Rotation < playerTarget)
                     {
@@ -132,7 +132,7 @@ public class BalanceBeam : MonoBehaviour
                         PlayerDirection = Direction.Left;
                     }
                     //This uses an increased movement speed so the movement isn't jerky but it also doesn't take too long to get to the target
-                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed + 1) * Time.deltaTime);
+                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed+1) * Time.fixedDeltaTime);
                     player?.RotatePlayer(-Rotation);
                 }
                 //Otherwise it goes back to the natural slipping direction
@@ -164,7 +164,7 @@ public class BalanceBeam : MonoBehaviour
                         }
                         break;
                 }
-                Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.deltaTime);
+                Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.fixedDeltaTime);
                 player?.RotatePlayer(-Rotation);
             }
             //Rotates it towards the direction the player is leaning (or just hit a button for)
