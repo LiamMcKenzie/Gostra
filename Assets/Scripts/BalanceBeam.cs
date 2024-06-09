@@ -25,16 +25,17 @@ public enum Direction
 /// </summary>
 public class BalanceBeam : MonoBehaviour
 {
-    [SerializeField]private PlayerController player; 
+    private Coroutine balanceCoroutine;
+    [SerializeField] private PlayerController player;
     //Transform of the handle
-    [SerializeField]private RectTransform handleRect; 
+    [SerializeField] private RectTransform handleRect;
     //This is the value of the current rotation between -1 and 1
     private float rotation;
     //Public getter and setter for rotation
     public float Rotation
     {
         get { return rotation; }
-        set 
+        set
         {
             rotation = value;
             OnRotation(value);
@@ -44,12 +45,13 @@ public class BalanceBeam : MonoBehaviour
     //Public setter for being on the pole
     public bool OnPole
     {
-        set {
+        set
+        {
             onPole = value;
-            // if (value)
-            // {
-            //    StartCoroutine(Balancing());
-            // }
+            if (value)
+            {
+                // StartCoroutine(Balancing());
+            }
         }
     }
     //Speed of slider movement
@@ -70,20 +72,21 @@ public class BalanceBeam : MonoBehaviour
         set { slipped = value; }
     }
     //Temporary text display for slipping off
-    [SerializeField]private GameObject slipText;
+    [SerializeField] private GameObject slipText;
     //The current direction that the player is leaning
     private Direction direction;
     public Direction Direction
     {
         get { return direction; }
-        set {
+        set
+        {
             //If the player is leaning in a different direction increase the speed
-                if (value != direction)
-                {
-                    speed += SPEED_INCREASE;
-                }
-                direction = value;
+            if (value != direction)
+            {
+                speed += SPEED_INCREASE;
             }
+            direction = value;
+        }
     }
     //The place the player has just hit the button to move to
     private float playerTarget;
@@ -95,7 +98,9 @@ public class BalanceBeam : MonoBehaviour
         Rotation = 0;
         speed = START_SPEED;
         slipped = false;
+        Application.targetFrameRate = 60;
     }
+
 
     private void OnRotation(float value)
     {
@@ -109,7 +114,7 @@ public class BalanceBeam : MonoBehaviour
     /// <param name="target">The target value</param>
     private IEnumerator Balancing()
     {
-        while(!slipped)
+        while (!slipped)
         {
             //If the player just hit a button it briefly grabs the movement and goes in that direction until it reaches the player set target then goes back to the natural slipping direction
             if (playerMovement)
@@ -127,7 +132,7 @@ public class BalanceBeam : MonoBehaviour
                         PlayerDirection = Direction.Left;
                     }
                     //This uses an increased movement speed so the movement isn't jerky but it also doesn't take too long to get to the target
-                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed+1) * Time.deltaTime);
+                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed + 1) * Time.deltaTime);
                     player?.RotatePlayer(-Rotation);
                 }
                 //Otherwise it goes back to the natural slipping direction
@@ -165,7 +170,7 @@ public class BalanceBeam : MonoBehaviour
             //Rotates it towards the direction the player is leaning (or just hit a button for)
             //It is using move towards so it moves smoothly
             //If the gauge is in the red then the player has slipped
-            if(Rotation < -.8f || Rotation > .8f)
+            if (Rotation < -.8f || Rotation > .8f)
             {
                 player?.Fall();
                 slipped = true;
@@ -183,7 +188,7 @@ public class BalanceBeam : MonoBehaviour
     public void PlayerBalancing(InputAction.CallbackContext context)
     {
         //If the player has slipped, isn't on the pole yet, or is already moving then you can't move
-        if (!context.performed || slipped || playerMovement )
+        if (!context.performed || slipped || playerMovement || !onPole)
         {
             return;
         }
@@ -191,7 +196,7 @@ public class BalanceBeam : MonoBehaviour
         //Calculation from copilot
         float change = (float)rand.NextDouble() * 0.2f + 0.1f;
         //Sets the playerTarget to the randomized number
-        if(context.ReadValue<Vector2>().x > 0)
+        if (context.ReadValue<Vector2>().x > 0)
         {
             playerTarget = Rotation - change;
         }
@@ -203,9 +208,25 @@ public class BalanceBeam : MonoBehaviour
     }
 
     public void StartBalanceBeam()
-    {
-        Debug.Log("Starting balance beam");
+    {     
         OnPole = true;
-        StartCoroutine(Balancing());
+        balanceCoroutine = StartCoroutine(Balancing());
+    }
+
+    public void StopBalanceBeam()
+    {
+        if (balanceCoroutine != null)
+        {
+            StopCoroutine(balanceCoroutine);
+        }
+    }   
+
+    public void Reset()
+    {
+        OnPole = false;
+        slipped = false;
+        slipText.SetActive(false);
+        Rotation = 0;
+        speed = START_SPEED;
     }
 }
