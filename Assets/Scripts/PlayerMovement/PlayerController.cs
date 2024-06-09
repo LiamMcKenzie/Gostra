@@ -17,9 +17,11 @@ using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     public UnityEvent ReachedPoleEvent;
+    public UnityEvent PlayerFellEvent;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
+    [SerializeField] private MoveAlongSpline moveAlongSpline;
 
 
     [Header("Speed")]
@@ -35,7 +37,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(-1, 1)] private float fallThreshold = 0.9f; //the amount the player has to rotate before falling 
     [SerializeField, Range(0, 3)] private float speedThreshold = 0.3f; //the amount the player has to slow down to before falling
 
-    private GameManager gameManager;
     private bool isFalling = false;
     private Transform playerPosition;  // The player's position
     private float playerStartPosY;  // The player's starting Y position
@@ -48,7 +49,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameManager.Instance;
         playerPosition = transform;
         playerStartPosY = PlayerPosY;
         animator.Play("Idle");
@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
         Speed = 0f;
         isFalling = true;
         animator.enabled = false; //disable the animator component. which causes the player to become a ragdoll
+        PlayerFellEvent.Invoke();
     }
 
     public void Run()
@@ -107,5 +108,18 @@ public class PlayerController : MonoBehaviour
         {
             Fall();
         }
+    }
+
+    public void Reset()
+    {
+        IsIdle = true;
+        isFalling = false;
+        reachedPole = false;
+        animator.Play("Idle");
+        Speed = 0f;
+        playerRotation = 0;
+        transform.rotation = Quaternion.identity;
+        animator.enabled = true;
+        moveAlongSpline.ResetPosition();
     }
 }
