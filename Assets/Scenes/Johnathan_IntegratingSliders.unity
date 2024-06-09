@@ -504,8 +504,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveCamera: {fileID: 1096775755}
   uIManager: {fileID: 1565714508}
-  player: {fileID: 1751727685}
   meterManager: {fileID: 1454154173}
+  player: {fileID: 1751727685}
   timeBeforeReset: 2
 --- !u!1 &375948982 stripped
 GameObject:
@@ -1437,11 +1437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7673ff02b7a4e4aeead625338d326717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1751727685}
   balanceBeam: {fileID: 601360073691183779}
   runningSlider: {fileID: 9174649909886516424}
-  player: {fileID: 1751727685}
-  balanceDisplay: {fileID: 72661091}
-  runningDisplay: {fileID: 599144990}
 --- !u!1 &1461102711
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,6 +1742,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   titleScreen: {fileID: 2029781109}
+  balanceDisplay: {fileID: 72661091}
+  runningDisplay: {fileID: 599144990}
 --- !u!850595691 &1572120158
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -2218,7 +2218,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 130, y: 0}
+  m_AnchoredPosition: {x: -1105, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2029781109
