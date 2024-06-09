@@ -5,6 +5,7 @@
 /// </remarks>
 // <summary>
 /// This class controls the player's movement.
+/// The PlayerAnimator script was refactored into this script.
 /// </summary>
 
 using UnityEngine;
