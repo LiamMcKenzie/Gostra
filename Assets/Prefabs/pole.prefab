@@ -83,6 +83,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: pole
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9ef5d74d33a214992bdcaf5999efee35,
+        type: 3}
+      propertyPath: m_TagString
+      value: pole
+      objectReference: {fileID: 0}
     - target: {fileID: 7202271454713460447, guid: 9ef5d74d33a214992bdcaf5999efee35,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
