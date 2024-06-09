@@ -71,6 +71,7 @@ public class RunningSlider : MonoBehaviour
         movementSpeed = STARTING_MOVEMENT_SPEED;
         resultText.text = "Movement Speed: " + movementSpeed;
         placeTarget(.8f); //Hardcoding for now
+        // I moved these to StartRunningSlider() -JGG
         //movementCoroutine = StartCoroutine(Movement());
         //speedCoroutine = StartCoroutine(IncreaseSpeed());
     }
@@ -117,6 +118,7 @@ public class RunningSlider : MonoBehaviour
                 slider.value += sliderSpeed;
                 if (slider.value >= 1)
                 {
+                    // If the player misses the check, lower their speed, unless they are idle -JGG   
                     if (player != null && player.IsIdle == false)
                     {
                         player.Speed -= MOVEMENT_SPEED_CHANGE;
@@ -158,23 +160,33 @@ public class RunningSlider : MonoBehaviour
         increasing = false;
         if (slider.value >= low && slider.value <= high)
         {
-            // On the first successful check, make the player start running -JGG
-            if (player != null && player.IsIdle)
+            if (player != null)
             {
-                player.Run();
+                // On the first successful check, make the player start running -JGG
+                if (player.IsIdle)
+                {
+                    player.Run();
+                }
+                player.Speed += MOVEMENT_SPEED_CHANGE;
             }
-            player.Speed += MOVEMENT_SPEED_CHANGE;
+            
             movementSpeed += MOVEMENT_SPEED_CHANGE;
             resultText.text = "Success! \n Movement Speed: " + movementSpeed;
         }
         else
         {
-            // If the first check fails, make the player fall -JGG
-            if (player != null && player.IsIdle)
+            if (player != null)
             {
-                player.Fall();
+                // If the player is idle and fails the check, make them fall -JGG
+                if (player.IsIdle)
+                {
+                    player.Fall();
+                }
+                else
+                {
+                    player.Speed -= MOVEMENT_SPEED_CHANGE;
+                }
             }
-            Debug.Log("Player Speed: " + player.Speed );
             movementSpeed -= MOVEMENT_SPEED_CHANGE;
             if (movementSpeed < 0)
             {
@@ -184,6 +196,9 @@ public class RunningSlider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the slider to the starting position
+    /// </summary>
     public void Reset()
     {
         slider.value = 0;
@@ -193,6 +208,9 @@ public class RunningSlider : MonoBehaviour
         increasing = true;
     }
 
+    /// <summary>
+    /// Stops the slider coroutines
+    /// </summary>
     public void StopRunningSlider()
     {
         if (movementCoroutine != null)
@@ -205,6 +223,9 @@ public class RunningSlider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the slider coroutines
+    /// </summary>
     public void StartRunningSlider()
     {
         movementCoroutine = StartCoroutine(Movement());
