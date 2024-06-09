@@ -1,6 +1,18 @@
+/// <remarks>
+/// Author: Johnathan
+/// Date Created: 9/6/2024
+/// Contributors: Assisted by Github Copilot
+/// </remarks>
+// <summary>
+/// This class controls the debug panel.
+/// </summary>
+
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// This class controls the debug panel.
+/// </summary>
 public class DebugPanel : MonoBehaviour
 {
     [SerializeField] private PlayerController player;

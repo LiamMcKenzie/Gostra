@@ -1,9 +1,11 @@
-/*
- * File: FPSCounter.cs
- * Purpose: Creates a UI element displaying FPS
- * Author: Johnathan
- * Contributions: Assisted by GitHub Copilot, based on code from https://www.sharpcoderblog.com/blog/unity-fps-counter
- */
+/// <remarks>
+/// Author: Johnathan
+/// Date Created: 15/4/2024
+/// Contributors: Assisted by GitHub Copilot, based on code from https://www.sharpcoderblog.com/blog/unity-fps-counter
+/// </remarks>
+/// <summary>
+/// This class creates a UI element displaying FPS.
+/// </summary>
 
 using UnityEngine;
 using TMPro;
