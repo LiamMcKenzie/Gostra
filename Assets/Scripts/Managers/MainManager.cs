@@ -46,7 +46,7 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         player.PlayerFellEvent.AddListener(EndGame);
-        meterManager.ActivateGameObjects(false);
+        uIManager.ShowMeters(false);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class MainManager : MonoBehaviour
     public void StartFromTitleScreen()
     {
         GameStarted = true;
-        meterManager.ActivateGameObjects(true);
+        uIManager.ShowMeters(true);
         meterManager.StartRunningSlider();
     }
 

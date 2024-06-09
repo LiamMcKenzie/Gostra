@@ -2,12 +2,28 @@ using UnityEngine;
 
 public class MeterManager : MonoBehaviour
 {
+    [SerializeField] private PlayerController player;
     [SerializeField] private BalanceBeam balanceBeam;
     [SerializeField] private RunningSlider runningSlider;
-    [SerializeField] private PlayerController player;
 
-        [SerializeField] private GameObject balanceDisplay;
-        [SerializeField] private GameObject runningDisplay;
+
+
+    # region Singleton
+    public static MeterManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    #endregion
+
 
     void Start()
     {
@@ -19,7 +35,7 @@ public class MeterManager : MonoBehaviour
     {
         runningSlider.Reset();
         balanceBeam.Reset();
-    }   
+    }
 
     public void StartRunningSlider()
     {
@@ -30,11 +46,5 @@ public class MeterManager : MonoBehaviour
     {
         runningSlider.StopRunningSlider();
         balanceBeam.StopBalanceBeam();
-    }
-
-    public void ActivateGameObjects(bool activate)
-    {
-        runningDisplay.gameObject.SetActive(activate);
-        balanceDisplay.gameObject.SetActive(activate);
     }
 }
