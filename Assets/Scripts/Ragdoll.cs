@@ -32,7 +32,7 @@ public class Ragdoll : MonoBehaviour
         }
         else//when character died
         {
-            Debug.Log("test");
+            //Debug.Log("test");
             animator.Play("Idle");
             //mainCollider.enabled = false;//disable the capsule collider
             StartCoroutine(disableCollider()); //disabling child colliders

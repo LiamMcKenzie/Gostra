@@ -15,22 +15,24 @@ using TMPro;
 
 public class RunningSlider : MonoBehaviour
 {
+    [SerializeField] private PlayerController player;
     private Slider slider;
     //If the slider is increasing or decreasing
     private bool increasing = true;
     //The starting slider speed. Current slider speed is also kept in this variable
-    private float sliderSpeed = 0.01f;
+    [SerializeField] private float sliderSpeed = 0.01f;
+    [SerializeField] private float startingSliderSpeed = 0.01f; // added for Reset -JGG
     //How often the slider speed increases in seconds
     private const float TIME_INCREMENTS = 1f;
     //How much the slider speed increases by
     private const float SLIDER_SPEED_INCREASE = 0.001f;
     //These two just have temporary values in them. Not sure what movement speed we will be wanting.
-    private const float STARTING_MOVEMENT_SPEED = 1f;
+    private const float STARTING_MOVEMENT_SPEED = 0f;
     private const float MOVEMENT_SPEED_CHANGE = 1f;
     //The range of the slider that the target can be in to speed up
     private float targetRange;
     //The target on the slider
-    [SerializeField]private GameObject Target;
+    [SerializeField] private GameObject Target;
     private float sliderHeight;
     private float targetHeight;
     private float targetPosition;
@@ -42,6 +44,10 @@ public class RunningSlider : MonoBehaviour
         get { return movementSpeed; }
     }
     [SerializeField] private TextMeshProUGUI resultText;
+
+    // Declare the coroutines so they can be stopped -JGG
+    private Coroutine movementCoroutine;
+    private Coroutine speedCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +62,7 @@ public class RunningSlider : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
+        sliderSpeed = startingSliderSpeed;
         //Height of the slider
         sliderHeight = GetComponent<RectTransform>().rect.height;
         //Height of the target
@@ -65,8 +72,9 @@ public class RunningSlider : MonoBehaviour
         movementSpeed = STARTING_MOVEMENT_SPEED;
         resultText.text = "Movement Speed: " + movementSpeed;
         placeTarget(.8f); //Hardcoding for now
-        StartCoroutine(Movement());
-        StartCoroutine(IncreaseSpeed());
+        // I moved these to StartRunningSlider() -JGG
+        //movementCoroutine = StartCoroutine(Movement());
+        //speedCoroutine = StartCoroutine(IncreaseSpeed());
     }
 
     //Placing the target on the slider
@@ -111,6 +119,11 @@ public class RunningSlider : MonoBehaviour
                 slider.value += sliderSpeed;
                 if (slider.value >= 1)
                 {
+                    // If the player misses the check, lower their speed, unless they are idle -JGG   
+                    if (player != null && player.IsIdle == false)
+                    {
+                        player.Speed -= MOVEMENT_SPEED_CHANGE;
+                    }
                     movementSpeed -= MOVEMENT_SPEED_CHANGE;
                     if (movementSpeed < 0)
                     {
@@ -138,7 +151,7 @@ public class RunningSlider : MonoBehaviour
     public void RunningInteract(InputAction.CallbackContext context)
     {
         //This is so it doesn't call it multiple times when the key is pressed
-        if (!context.performed || !increasing)
+        if (!context.performed || !increasing || MainManager.Instance.GameStarted == false)
         {
             return;
         }
@@ -148,11 +161,33 @@ public class RunningSlider : MonoBehaviour
         increasing = false;
         if (slider.value >= low && slider.value <= high)
         {
+            if (player != null)
+            {
+                // On the first successful check, make the player start running -JGG
+                if (player.IsIdle)
+                {
+                    player.Run();
+                }
+                player.Speed += MOVEMENT_SPEED_CHANGE;
+            }
+            
             movementSpeed += MOVEMENT_SPEED_CHANGE;
             resultText.text = "Success! \n Movement Speed: " + movementSpeed;
         }
         else
         {
+            if (player != null)
+            {
+                // If the player is idle and fails the check, make them fall -JGG
+                if (player.IsIdle)
+                {
+                    player.Fall();
+                }
+                else
+                {
+                    player.Speed -= MOVEMENT_SPEED_CHANGE;
+                }
+            }
             movementSpeed -= MOVEMENT_SPEED_CHANGE;
             if (movementSpeed < 0)
             {
@@ -160,5 +195,41 @@ public class RunningSlider : MonoBehaviour
             }
             resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
         }
+    }
+
+    /// <summary>
+    /// Resets the slider to the starting position
+    /// </summary>
+    public void Reset()
+    {
+        slider.value = 0;
+        movementSpeed = STARTING_MOVEMENT_SPEED;
+        sliderSpeed = startingSliderSpeed;
+        resultText.text = "Movement Speed: " + movementSpeed;
+        increasing = true;
+    }
+
+    /// <summary>
+    /// Stops the slider coroutines
+    /// </summary>
+    public void StopRunningSlider()
+    {
+        if (movementCoroutine != null)
+        {
+            StopCoroutine(movementCoroutine);
+        }
+        if (speedCoroutine != null)
+        {
+            StopCoroutine(speedCoroutine);
+        }
+    }
+
+    /// <summary>
+    /// Starts the slider coroutines
+    /// </summary>
+    public void StartRunningSlider()
+    {
+        movementCoroutine = StartCoroutine(Movement());
+        speedCoroutine = StartCoroutine(IncreaseSpeed());
     }
 }
