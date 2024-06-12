@@ -159,6 +159,7 @@ public class RunningSlider : MonoBehaviour
         float low = targetPosition - targetRange / 2;
         float high = targetPosition + targetRange / 2;
         increasing = false;
+
         if (slider.value >= low && slider.value <= high)
         {
             if (player != null)
@@ -195,6 +196,8 @@ public class RunningSlider : MonoBehaviour
             }
             resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
         }
+
+        player.UpdateAnimationSpeed(); //this is called here because the speed is updated in the code above -LM
     }
 
     /// <summary>
