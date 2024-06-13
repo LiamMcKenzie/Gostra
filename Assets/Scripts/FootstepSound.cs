@@ -17,7 +17,12 @@ public class FootstepSound : MonoBehaviour
 
     private void PlayFootstepSound()
     {
-        audioSource?.PlayOneShot(footstepSand);
+        if(audioSource == null)
+        {
+            return;
+        }
+        audioSource.pitch = Random.Range(0.9f, 1.1f); //randomizes the pitch
+        audioSource.PlayOneShot(footstepSand, Random.Range(0.8f, 1.2f)); //plays the sound once, randomizes volume
     }
 
     private void Update()
