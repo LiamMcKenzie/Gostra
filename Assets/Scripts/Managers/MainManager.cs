@@ -23,9 +23,12 @@ public class MainManager : MonoBehaviour
     [SerializeField] private MeterManager meterManager;
     [SerializeField] private PlayerController player;
 
-    [Header("Settings")]
-    [SerializeField] private float timeBeforeReset = 2f;
+    [Header("Reset Times")]
+    [SerializeField] private float potatoResetTime = 1f;    // reset time in potato mode
+    [SerializeField] private float normalResetTime = 2f;   // reset time in normal mode
+
     public bool GameStarted { get; private set; } = false;
+    private float timeBeforeReset;
 
     # region Singleton
     public static MainManager Instance { get; private set; }
@@ -46,17 +49,14 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         player.PlayerFellEvent.AddListener(EndGame);
+        timeBeforeReset = normalResetTime;
         uIManager.ShowMeters(false);
     }
 
     /// <summary>
-    /// Ends the game
+    /// Switches the reset time based on the optimisation mode
     /// </summary>
-    private void EndGame()
-    {
-        meterManager.StopMeters();
-        StartCoroutine(WaitThen(Reset));
-    }
+    public void SwitchResetTime(bool potatoActive) => timeBeforeReset = potatoActive ? potatoResetTime : normalResetTime;
 
     /// <summary>
     /// Waits for a certain amount of time before calling a callback
@@ -89,6 +89,15 @@ public class MainManager : MonoBehaviour
         GameStarted = true;
         uIManager.ShowMeters(true);
         meterManager.StartRunningSlider();
+    }
+
+    /// <summary>
+    /// Ends the game
+    /// </summary>
+    private void EndGame()
+    {
+        meterManager.StopMeters();
+        StartCoroutine(WaitThen(Reset));
     }
 
     /// <summary>
