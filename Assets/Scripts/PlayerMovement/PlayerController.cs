@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private MoveAlongSpline moveAlongSpline;
+    [SerializeField] private GameObject meshes;
 
     [Header("Speed")]
     [SerializeField] private float speedReductionFactor = 0.5f; // The factor to reduce speed by
@@ -36,15 +37,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(-1, 1)] private float fallThreshold = 0.9f; //the amount the player has to rotate before falling 
     [SerializeField, Range(0, 3)] private float speedThreshold = 0.3f; //the amount the player has to slow down to before falling
 
-    private bool isFalling = false;
     private Transform playerPosition;  // The player's position
     private float playerStartPosY;  // The player's starting Y position
 
     public bool IsIdle  { get; private set; } = true; 
-    public float AdjustedPlayerPosY => Mathf.Max(0, PlayerPosY - playerStartPosY); // The player's adjusted Y position where the starting Y position is effectively 0
+    public bool ReachedPole { get; private set; } = false;
+    public bool IsFalling { get; private set; } = false;
 
+    public float AdjustedPlayerPosY => Mathf.Max(0, PlayerPosY - playerStartPosY); // The player's adjusted Y position where the starting Y position is effectively 0
     private float PlayerPosY => playerPosition.position.y;  // The player's current Y position
-    private bool reachedPole;
 
     void Start()
     {
@@ -55,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (isFalling || IsIdle) { return; }
+        if (IsFalling || IsIdle) { return; }
 
         AdjustSpeedByHeight();
         CheckThresholds();   
@@ -79,9 +80,9 @@ public class PlayerController : MonoBehaviour
     private void AdjustSpeedByHeight()
     {
         if (AdjustedPlayerPosY <= 0) { return; } // If the player is at the starting Y position, don't adjust the speed 
-        if (reachedPole == false)
+        if (ReachedPole == false)
         {
-            reachedPole = true;
+            ReachedPole = true;
             ReachedPoleEvent.Invoke();
         }
         float newSpeed = Speed - (AdjustedPlayerPosY * speedReductionFactor);
@@ -94,7 +95,7 @@ public class PlayerController : MonoBehaviour
     public void Fall()
     {
         Speed = 0f;
-        isFalling = true;
+        IsFalling = true;
         animator.enabled = false; //disable the animator component. which causes the player to become a ragdoll
         PlayerFellEvent.Invoke();
     }
@@ -127,14 +128,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Reset()
     {
+        meshes.SetActive(true);
         IsIdle = true;
-        isFalling = false;
-        reachedPole = false;
+        IsFalling = false;
+        ReachedPole = false;
         animator.Play("Idle");
         Speed = 0f;
         playerRotation = 0;
         transform.rotation = Quaternion.identity;
         animator.enabled = true;
         moveAlongSpline.ResetPosition();
+    }
+
+    /// <summary>
+    /// Hides the player's meshes
+    /// </summary>
+    public void HidePlayer()
+    {
+        meshes.SetActive(false);
     }
 }
