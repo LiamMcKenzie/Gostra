@@ -578,7 +578,6 @@ MonoBehaviour:
   uIManager: {fileID: 1565714508}
   meterManager: {fileID: 1454154173}
   player: {fileID: 1751727685}
-  potatoCollider: {fileID: 425354456}
   potatoResetTime: 1
   normalResetTime: 2
 --- !u!1 &339752530
@@ -952,9 +951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0456c9d4b052a4181b491a98ccab3e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerContactEvent:
-    m_PersistentCalls:
-      m_Calls: []
   player: {fileID: 1751727685}
 --- !u!1 &462779996
 GameObject:
@@ -1513,7 +1509,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Foliage Density
+  m_text: Grass Density
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3212,10 +3208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d894599421b6e4c83aa088a554ab3459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleSoundButton: {fileID: 0}
-  settingsPanel: {fileID: 0}
-  soundOnIcon: {fileID: 0}
-  soundOffIcon: {fileID: 0}
+  toggleSoundButton: {fileID: 1576499860}
+  soundOnIcon: {fileID: 21300000, guid: 9d2e06693d96a4d0cbfc1c7cfd161a8f, type: 3}
+  soundOffIcon: {fileID: 21300000, guid: 9d6f3e8adee5945aeb244349a933e2ca, type: 3}
 --- !u!1 &1537386385
 GameObject:
   m_ObjectHideFlags: 0
@@ -3501,7 +3496,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1576499861}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1529879133}
+        m_TargetAssemblyTypeName: UIPanel, Assembly-CSharp
+        m_MethodName: ToggleSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1576499861
 MonoBehaviour:
   m_ObjectHideFlags: 0
