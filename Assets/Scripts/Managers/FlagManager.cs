@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// The colour of the flag.
@@ -26,6 +27,8 @@ public enum FlagColour
 /// </summary>
 public class FlagManager : MonoBehaviour
 {
+    [HideInInspector] public UnityEvent<FlagColour> FlagReachedEvent = new(); // Event to be invoked when a flag is reached
+
     [SerializeField] private PlayerController player;
     [SerializeField] private List<FlagHeight> flagHeights;
     [SerializeField] private float heightOffset = 0.3f; // use this to adjust the height at which the flag is considered reached
@@ -41,8 +44,8 @@ public class FlagManager : MonoBehaviour
     [Serializable]
     private struct FlagHeight
     {
-        public float height;
-        public FlagColour colour;
+        [field: SerializeField] public float Height { get; private set; }
+        [field: SerializeField] public FlagColour Colour { get; private set; }
     }
 
     void Update()
@@ -58,11 +61,12 @@ public class FlagManager : MonoBehaviour
         foreach (FlagHeight flag in flagHeights)
         {
             // If the player has already reached this flag, skip it
-            if (flagsWon.Contains(flag.colour)) { continue; }
+            if (flagsWon.Contains(flag.Colour)) { continue; }
             // If the player has reached the flag, add it to the list of flags won
-            if (player.AdjustedPlayerPosY >= flag.height - heightOffset)
+            if (player.AdjustedPlayerPosY >= flag.Height - heightOffset)
             {
-                flagsWon.Add(flag.colour);
+                FlagReachedEvent.Invoke(flag.Colour);
+                flagsWon.Add(flag.Colour);
             }
         }
     }
