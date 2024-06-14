@@ -30,8 +30,9 @@ public class MainManager : MonoBehaviour
     [SerializeField] private float potatoResetTime = 1f;    // reset time in potato mode
     [SerializeField] private float normalResetTime = 2f;   // reset time in normal mode
 
-    public bool GameStarted { get; private set; } = false;
     private float timeBeforeReset;
+
+    public bool GameStarted { get; private set; } = false;
 
     # region Singleton
     public static MainManager Instance { get; private set; }

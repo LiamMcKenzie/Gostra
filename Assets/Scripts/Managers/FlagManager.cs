@@ -33,10 +33,10 @@ public class FlagManager : MonoBehaviour
     [SerializeField] private List<FlagHeight> flagHeights;
     [SerializeField] private float heightOffset = 0.3f; // use this to adjust the height at which the flag is considered reached
 
+    private List<FlagColour> flagsWon = new();  // Tracks the flags the player has reached in a run
+
     // calling HighestFlag will return the highest flag the player has reached or null if no flags have been reached
     public FlagColour? HighestFlag => flagsWon.Count > 0 ? flagsWon[flagsWon.Count - 1] : null;
-
-    private List<FlagColour> flagsWon = new();  // Tracks the flags the player has reached in a run
 
     /// <summary>
     /// Helper struct to associate a flag height with a flag colour.
