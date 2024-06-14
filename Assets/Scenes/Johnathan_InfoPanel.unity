@@ -6115,7 +6115,7 @@ MonoBehaviour:
   speedReductionFactor: 0.01
   playerRotation: 0
   maxRotation: 45
-  speedThreshold: 0.3
+  speedThreshold: 0.1
   godMode: 0
   maxHeight: 3.75
 --- !u!1 &1751960651 stripped
