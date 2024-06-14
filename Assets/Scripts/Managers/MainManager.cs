@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// This class controls the game state
+/// This class controls the game state, including starting and ending the game, and displaying the win panel.
 /// </summary>
 public class MainManager : MonoBehaviour
 {
