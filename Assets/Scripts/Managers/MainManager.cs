@@ -24,6 +24,7 @@ public class MainManager : MonoBehaviour
     [SerializeField] private PlayerController player;
     [SerializeField] private FlagManager flagManager;
     [SerializeField] private WinPanel winPanel;
+    [SerializeField] private InfoPanel infoPanel;
 
     [Header("Reset Times")]
     [SerializeField] private float potatoResetTime = 1f;    // reset time in potato mode
@@ -89,6 +90,7 @@ public class MainManager : MonoBehaviour
     public void StartFromTitleScreen()
     {
         GameStarted = true;
+        infoPanel.gameObject.SetActive(true);
         uIManager.ShowMeters(true);
         meterManager.StartRunningSlider();
     }
@@ -96,11 +98,11 @@ public class MainManager : MonoBehaviour
     /// <summary>
     /// Ends the game
     /// </summary>
-    private void EndGame(float heightReached = 0)
+    private void EndGame()
     {
         meterManager.StopMeters();
         // if the player has reached a flag, show the win panel with the highest flag reached, otherwise reset the game
-        Action callback = flagManager.HighestFlag == null ? Reset : () => winPanel.ShowWinPanel(heightReached, flagManager.HighestFlag);
+        Action callback = flagManager.HighestFlag == null ? Reset : () => winPanel.ShowWinPanel(player.TopHeight, player.TopSpeed, flagManager.HighestFlag);
         StartCoroutine(WaitThen(callback));
     }
 
@@ -109,6 +111,7 @@ public class MainManager : MonoBehaviour
     /// </summary>
     public void Reset()
     {
+        infoPanel.Reset();
         flagManager.Reset();
         player.Reset();
         winPanel.HideWinPanel();
