@@ -16,19 +16,12 @@ using System;
 /// </summary>
 public class MoveCamera : MonoBehaviour
 {
+    [SerializeField] private Transform start; // The starting position of the camera
     [SerializeField] private Transform target; // The target position to move to
     [SerializeField] private float time = 1f; // Time in which the movement takes place
     [SerializeField] private float proximityCheck = 0.02f; // How close the camera needs to be to the target position to stop moving
 
-    private Vector3 startPosition; // The starting position of the camera
-    private Quaternion startRotation; // The starting rotation of the camera
     private bool isMoving = false;
-
-    void Start()
-    {
-        startPosition = transform.position;
-        startRotation = transform.rotation;
-    }
 
     /// <summary>
     /// Moves the camera to the target position
@@ -45,7 +38,7 @@ public class MoveCamera : MonoBehaviour
     /// <param name="afterCameraMovement">The action to perform after the camera has moved</param>
     public void MoveToStartPosition(Action afterCameraMovement = null)
     {
-        StartCoroutine(MoveToPositionCoroutine(startPosition, startRotation, afterCameraMovement));
+        StartCoroutine(MoveToPositionCoroutine(start.position, start.rotation, afterCameraMovement));
     }
 
     /// <summary>
@@ -58,7 +51,6 @@ public class MoveCamera : MonoBehaviour
     {
         if (isMoving)
         {
-            Debug.LogWarning("Camera is already moving");
             yield break;
         }
         isMoving = true;
@@ -89,4 +81,20 @@ public class MoveCamera : MonoBehaviour
         afterCameraMovementCallback?.Invoke();
         isMoving = false;
     }
+
+    /// <summary>
+    /// Moves and rotates the camera to the target transform
+    /// </summary>
+    /// <param name="targetTransform">The target transform to move the camera to</param>
+    private void MoveAndRotateCamera(Transform targetTransform)
+    {
+        transform.position = targetTransform.position;
+        transform.rotation = targetTransform.rotation;
+    }
+
+    [ContextMenu("Move to Game Position")]
+    public void MoveToGamePosition() => MoveAndRotateCamera(target);
+
+    [ContextMenu("Move to Start Position")]
+    public void MoveToStartPosition() => MoveAndRotateCamera(start);
 }

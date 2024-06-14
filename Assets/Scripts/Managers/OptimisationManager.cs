@@ -27,9 +27,7 @@ public class OptimisationManager : MonoBehaviour
     [SerializeField] private MeshRenderer poleRenderer;
 
     [Header("Camera")]
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private Transform cameraGamePosition;
-    [SerializeField] private Transform cameraStartPosition;
+    [SerializeField] private MoveCamera moveCamera;
 
     [Header("UI Elements")]
     [SerializeField] private Slider foliageDensitySlider;
@@ -108,7 +106,7 @@ public class OptimisationManager : MonoBehaviour
         prerenderedBG.SetActive(true);
 
         // Move camera into place (skip animation)
-        MoveAndRotateCamera(cameraGamePosition);
+        moveCamera.MoveToGamePosition();
 
         // save to player prefs
         PlayerPrefs.SetInt("PotatoMode", 1);
@@ -141,11 +139,11 @@ public class OptimisationManager : MonoBehaviour
         // Reenable camera movement
         if (mainManager.GameStarted)
         {
-            MoveAndRotateCamera(cameraGamePosition);
+            moveCamera.MoveToGamePosition();
         }
         else
         {
-            MoveAndRotateCamera(cameraStartPosition);
+            moveCamera.MoveToStartPosition();
         }
 
         // save to player prefs
@@ -202,16 +200,6 @@ public class OptimisationManager : MonoBehaviour
     {
         shadowsToggle.interactable = interactable;
         foliageDensitySlider.interactable = interactable;
-    }
-
-    /// <summary>
-    /// Moves and rotates the camera to the target transform
-    /// </summary>
-    /// <param name="targetTransform">The target transform to move the camera to</param>
-    private void MoveAndRotateCamera(Transform targetTransform)
-    {
-        mainCamera.transform.position = targetTransform.position;
-        mainCamera.transform.rotation = targetTransform.rotation;
     }
 
     /// <summary>
