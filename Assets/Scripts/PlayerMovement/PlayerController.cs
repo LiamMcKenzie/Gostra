@@ -18,7 +18,7 @@ using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     [HideInInspector] public UnityEvent ReachedPoleEvent;
-    [HideInInspector] public UnityEvent<float> PlayerFellEvent;
+    [HideInInspector] public UnityEvent PlayerFellEvent;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     [Header("Falling thresholds")]
     [SerializeField, Range(0, 3)] private float speedThreshold = 0.3f; //the amount the player has to slow down to before falling
     [SerializeField] bool godMode = false; //if true the player will not fall unless they are at the top of the pole
+    [SerializeField] float maxHeight = 3.75f; //the height the player has to be at to fall if godMode is true
 
     private Transform playerPosition;  // The player's position
     private float playerStartPosY;  // The player's starting Y position
@@ -43,6 +44,8 @@ public class PlayerController : MonoBehaviour
     public bool IsIdle { get; private set; } = true;
     public bool ReachedPole { get; private set; } = false;
     public bool IsFalling { get; private set; } = false;
+    public float TopSpeed { get; private set; } = 0;
+    public float TopHeight { get; private set; } = 0;   
 
     public float AdjustedPlayerPosY => Mathf.Max(0, PlayerPosY - playerStartPosY); // The player's adjusted Y position where the starting Y position is effectively 0
     private float PlayerPosY => playerPosition.position.y;  // The player's current Y position
@@ -50,7 +53,11 @@ public class PlayerController : MonoBehaviour
     public float Speed
     {
         get { return speed; }
-        set { speed = value < 0 ? 0 : value; }
+        set
+        {
+            speed = value < 0 ? 0 : value;
+            TopSpeed = Mathf.Max(TopSpeed, speed);
+        }
     }
 
     void Start()
@@ -66,6 +73,10 @@ public class PlayerController : MonoBehaviour
 
         AdjustSpeedByHeight();
         CheckSpeedThreshold();
+        if (AdjustedPlayerPosY > TopHeight)
+        {
+            TopHeight = AdjustedPlayerPosY;
+        }
     }
 
     /// <summary>
@@ -100,11 +111,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Fall()
     {
-        if (IsFalling || (godMode && AdjustedPlayerPosY < 3.75f)) { return; }
+        if (IsFalling || (godMode && AdjustedPlayerPosY < maxHeight)) { return; }
         Speed = 0f;
         IsFalling = true;
         animator.enabled = false; //disable the animator component. which causes the player to become a ragdoll
-        PlayerFellEvent.Invoke(AdjustedPlayerPosY);
+        PlayerFellEvent.Invoke();
     }
 
     /// <summary>
@@ -132,6 +143,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Reset()
     {
+        TopSpeed = 0;
+        TopHeight = 0;
         meshes.SetActive(true);
         IsIdle = true;
         IsFalling = false;
