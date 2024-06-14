@@ -1868,12 +1868,12 @@ MonoBehaviour:
     integerText: {fileID: 1986857932}
     decimalText: {fileID: 600020050}
   uIFlags:
-  - <flagSprite>k__BackingField: {fileID: 1879198691}
-    <flagColour>k__BackingField: 0
-  - <flagSprite>k__BackingField: {fileID: 940871881}
-    <flagColour>k__BackingField: 1
-  - <flagSprite>k__BackingField: {fileID: 130741628}
-    <flagColour>k__BackingField: 2
+  - <FlagImage>k__BackingField: {fileID: 1879198691}
+    <FlagColour>k__BackingField: 0
+  - <FlagImage>k__BackingField: {fileID: 940871881}
+    <FlagColour>k__BackingField: 1
+  - <FlagImage>k__BackingField: {fileID: 130741628}
+    <FlagColour>k__BackingField: 2
   unreachedFlagAlpha: 0.4
 --- !u!1 &599144990
 GameObject:
