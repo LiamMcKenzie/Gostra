@@ -70,7 +70,7 @@ public class OptimisationManager : MonoBehaviour
     #endregion
 
     void Start()
-    {
+    {   
         // Apply the player's settings from the player prefs
         ApplySettingsPrefs();
     }
@@ -93,7 +93,7 @@ public class OptimisationManager : MonoBehaviour
 
         // adjust UI elements
         ToggleUIInteractable(false);
-        shadowsToggle.isOn = false;
+        //shadowsToggle.isOn = false;
 
         // Disable terrain component
         terrain.SetActive(false);
@@ -151,8 +151,7 @@ public class OptimisationManager : MonoBehaviour
         // save to player prefs
         PlayerPrefs.SetInt("PotatoMode", 0);
 
-        // Apply the player's other settings from the player prefs
-        ApplySettingsPrefs(skipPotato: true);
+        ApplySettingsPrefs();
     }
 
     /// <summary>
@@ -175,13 +174,11 @@ public class OptimisationManager : MonoBehaviour
     /// Toggles shadows on the directional light
     /// </summary>
     /// <param name="shadowsOn">Whether to enable or disable shadows</param>
-    public void ToggleShadows(bool shadowsOn)
+    public void SetShadows(bool shadowsOn)
     {
         directionalLight.shadows = shadowsOn ? LightShadows.Soft : LightShadows.None;
-        shadowsToggle.isOn = shadowsOn;
 
         PlayerPrefs.SetInt("ShadowsOn", shadowsOn ? 1 : 0);
-        PlayerPrefs.Save(); // Don't forget to save the changes
     }
 
     /// <summary>
@@ -233,19 +230,29 @@ public class OptimisationManager : MonoBehaviour
     /// Applies the player settings from the player prefs
     /// </summary>
     /// <param name="skipPotato">Whether to skip the potato mode settings</param>
-    private void ApplySettingsPrefs(bool skipPotato = false)
+    /// <remarks>
+    /// The logic in this method reflects that while the UI elements need to programmitically set to the correct state,
+    /// the OnValueChanged listeners attached to the UI elements need to be accounted for.
+    /// </remarks>
+    private void ApplySettingsPrefs()
     {
         var playerSettings = GetPlayerSettings();
 
-        ToggleShadows(playerSettings.ShadowsOn);
-        shadowsToggle.isOn = playerSettings.ShadowsOn;
-
-        SetFoliageDensity(playerSettings.FoliageDensity);
+        // changing the slider value will trigger the OnValueChanged listener which will call SetFoliageDensity
         foliageDensitySlider.value = playerSettings.FoliageDensity;
 
-        if (skipPotato == false)
+        if (shadowsToggle.isOn == playerSettings.ShadowsOn) // toggle state matches player prefs, so call SetShadows directly
         {
-            PotatoMode(playerSettings.PotatoModeActive);
+            SetShadows(playerSettings.ShadowsOn);
+        }
+        else    // toggle state doesn't match player prefs, so set the toggle state which in turn calls SetShadows
+        {
+            shadowsToggle.isOn = playerSettings.ShadowsOn;
+        }
+
+        if (playerSettings.PotatoModeActive)
+        {
+            // Change the potato toggle state to trigger the OnValueChanged listener and call PotatoMode
             potatoToggle.isOn = playerSettings.PotatoModeActive;
         }
     }
