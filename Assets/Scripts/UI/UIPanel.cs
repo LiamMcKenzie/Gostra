@@ -23,6 +23,7 @@ public class UIPanel : MonoBehaviour
         // Load soundOn from player prefs
         soundOn = PlayerPrefs.GetInt("SoundOn", 1) == 1;
         toggleSoundButton.image.sprite = soundOn ? soundOnIcon : soundOffIcon;
+        /* call the audio manager here */
     }
 
     /// <summary>
@@ -33,7 +34,7 @@ public class UIPanel : MonoBehaviour
     {
         soundOn = !soundOn;
         toggleSoundButton.image.sprite = soundOn ? soundOnIcon : soundOffIcon;
-        /* link the audio manager here */
+        /* call the audio manager here */
         // save soundOn to player prefs
         PlayerPrefs.SetInt("SoundOn", soundOn ? 1 : 0);
     }
