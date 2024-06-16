@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// This class controls the game state
+/// This class controls the game state, including starting and ending the game, and displaying the win panel.
 /// </summary>
 public class MainManager : MonoBehaviour
 {
@@ -22,9 +22,16 @@ public class MainManager : MonoBehaviour
     [SerializeField] private UIManager uIManager;
     [SerializeField] private MeterManager meterManager;
     [SerializeField] private PlayerController player;
+    [SerializeField] private FlagManager flagManager;
+    [SerializeField] private WinPanel winPanel;
+    [SerializeField] private InfoPanel infoPanel;
 
-    [Header("Settings")]
-    [SerializeField] private float timeBeforeReset = 2f;
+    [Header("Reset Times")]
+    [SerializeField] private float potatoResetTime = 1f;    // reset time in potato mode
+    [SerializeField] private float normalResetTime = 2f;   // reset time in normal mode
+
+    private float timeBeforeReset;
+
     public bool GameStarted { get; private set; } = false;
 
     # region Singleton
@@ -46,17 +53,14 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         player.PlayerFellEvent.AddListener(EndGame);
+        timeBeforeReset = normalResetTime;
         uIManager.ShowMeters(false);
     }
 
     /// <summary>
-    /// Ends the game
+    /// Switches the reset time based on the optimisation mode
     /// </summary>
-    private void EndGame()
-    {
-        meterManager.StopMeters();
-        StartCoroutine(WaitThen(Reset));
-    }
+    public void SwitchResetTime(bool potatoActive) => timeBeforeReset = potatoActive ? potatoResetTime : normalResetTime;
 
     /// <summary>
     /// Waits for a certain amount of time before calling a callback
@@ -87,16 +91,31 @@ public class MainManager : MonoBehaviour
     public void StartFromTitleScreen()
     {
         GameStarted = true;
+        infoPanel.gameObject.SetActive(true);
         uIManager.ShowMeters(true);
         meterManager.StartRunningSlider();
     }
 
     /// <summary>
+    /// Ends the game
+    /// </summary>
+    private void EndGame()
+    {
+        meterManager.StopMeters();
+        // if the player has reached a flag, show the win panel with the highest flag reached, otherwise reset the game
+        Action callback = flagManager.HighestFlag == null ? Reset : () => winPanel.ShowWinPanel(player.TopHeight, player.TopSpeed, flagManager.HighestFlag);
+        StartCoroutine(WaitThen(callback));
+    }
+
+    /// <summary>
     /// Resets the game
     /// </summary>
-    private void Reset()
+    public void Reset()
     {
+        infoPanel.Reset();
+        flagManager.Reset();
         player.Reset();
+        winPanel.HideWinPanel();
         meterManager.Reset();
         meterManager.StartRunningSlider();
     }
