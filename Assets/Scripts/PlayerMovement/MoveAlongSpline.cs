@@ -33,7 +33,7 @@ public class MoveAlongSpline : MonoBehaviour
 
     void Update()
     {
-        if (player.IsIdle) { return; }
+        if (player.IsIdle || player.IsFalling) { return; }
         
         UpdatePosition();
         UpdateRotation();
