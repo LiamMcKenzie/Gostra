@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UnityEngine.InputSystem;
+using TMPro;
 
 //Enum for the side of the balance meter the arrow is on and where the slider will be moving to
 public enum Direction
@@ -68,8 +69,7 @@ public class BalanceBeam : MonoBehaviour
         get { return slipped; }
         set { slipped = value; }
     }
-    //Temporary text display for slipping off
-    [SerializeField] private GameObject slipText;
+    [SerializeField] private TextMeshProUGUI fallText;
     //The current direction that the player is leaning
     private Direction direction;
     public Direction Direction
@@ -171,7 +171,8 @@ public class BalanceBeam : MonoBehaviour
             {
                 player?.Fall();
                 slipped = true;
-                slipText.SetActive(true);
+                fallText.text = "You lost your balance!";
+                fallText.gameObject.SetActive(true);
                 //Round rotation to the nearest whole number (-1 or 1)
                 Rotation = Mathf.Round(Rotation);
             }
@@ -231,7 +232,7 @@ public class BalanceBeam : MonoBehaviour
     {
         OnPole = false;
         slipped = false;
-        slipText.SetActive(false);
+        fallText.gameObject.SetActive(false);
         Rotation = 0;
         speed = START_SPEED;
     }
