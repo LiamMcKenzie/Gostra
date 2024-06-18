@@ -20,15 +20,15 @@ public class RunningSlider : MonoBehaviour
     //If the slider is increasing or decreasing
     private bool increasing = true;
     //The starting slider speed. Current slider speed is also kept in this variable
-    [SerializeField] private float sliderSpeed = 0.01f;
-    [SerializeField] private float startingSliderSpeed = 0.01f; // added for Reset -JGG
+    private float sliderSpeed;
+    private float startingSliderSpeed = 1f; // added for Reset -JGG
     //How often the slider speed increases in seconds
     private const float TIME_INCREMENTS = 1f;
     //How much the slider speed increases by
-    private const float SLIDER_SPEED_INCREASE = 0.001f;
+    private const float SLIDER_SPEED_INCREASE = 0.1f;
     //These two just have temporary values in them. Not sure what movement speed we will be wanting.
     private const float STARTING_MOVEMENT_SPEED = 0f;
-    private const float MOVEMENT_SPEED_CHANGE = 1f;
+    private const float MOVEMENT_SPEED_CHANGE = .8f;
     //The range of the slider that the target can be in to speed up
     private float targetRange;
     //The target on the slider
@@ -114,7 +114,7 @@ public class RunningSlider : MonoBehaviour
         {
             if (increasing)
             {
-                slider.value += sliderSpeed;
+                slider.value += sliderSpeed * Time.deltaTime;
                 if (slider.value >= 1)
                 {
                     // If the player misses the check, lower their speed, unless they are idle -JGG   
@@ -138,7 +138,7 @@ public class RunningSlider : MonoBehaviour
                     increasing = true;
                 }
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return null;
         } while (true);
     }
 
