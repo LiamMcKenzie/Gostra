@@ -68,8 +68,6 @@ public class BalanceBeam : MonoBehaviour
         get { return slipped; }
         set { slipped = value; }
     }
-    //Temporary text display for slipping off
-    [SerializeField] private GameObject slipText;
     //The current direction that the player is leaning
     private Direction direction;
     public Direction Direction
@@ -171,7 +169,6 @@ public class BalanceBeam : MonoBehaviour
             {
                 player?.Fall();
                 slipped = true;
-                slipText.SetActive(true);
                 //Round rotation to the nearest whole number (-1 or 1)
                 Rotation = Mathf.Round(Rotation);
             }
@@ -231,7 +228,6 @@ public class BalanceBeam : MonoBehaviour
     {
         OnPole = false;
         slipped = false;
-        slipText.SetActive(false);
         Rotation = 0;
         speed = START_SPEED;
     }
