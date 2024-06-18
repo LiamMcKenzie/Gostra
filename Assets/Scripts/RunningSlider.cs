@@ -175,11 +175,7 @@ public class RunningSlider : MonoBehaviour
             if (player != null)
             {
                 // If the player is idle and fails the check, make them fall -JGG
-                if (player.IsIdle)
-                {
-                    player.Fall();
-                }
-                else
+                if (!player.IsIdle)
                 {
                     player.Speed -= MOVEMENT_SPEED_CHANGE;
                 }
