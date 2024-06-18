@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
         {
             speed = value < 0 ? 0 : value;
             TopSpeed = Mathf.Max(TopSpeed, speed);
+            UpdateAnimationSpeed();
         }
     }
 

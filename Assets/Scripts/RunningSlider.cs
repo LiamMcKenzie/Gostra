@@ -196,8 +196,6 @@ public class RunningSlider : MonoBehaviour
             }
             resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
         }
-
-        player.UpdateAnimationSpeed(); //this is called here because the speed is updated in the code above -LM
     }
 
     /// <summary>
