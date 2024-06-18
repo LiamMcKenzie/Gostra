@@ -10,6 +10,7 @@
 
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 /// <summary>
 /// This class controls the player's movement and rotation.
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private MoveAlongSpline moveAlongSpline;
     [SerializeField] private GameObject meshes;
+    [SerializeField] private TextMeshProUGUI fallText;
 
     [Header("Speed")]
     [SerializeField] private float speedReductionFactor = 0.5f; // The factor to reduce speed by
@@ -137,6 +139,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Speed <= speedThreshold)
         {
+            fallText.text = "Too slow!";
+            fallText.gameObject.SetActive(true);
             Fall();
         }
     }
@@ -148,6 +152,7 @@ public class PlayerController : MonoBehaviour
     {
         TopSpeed = 0;
         TopHeight = 0;
+        fallText.gameObject.SetActive(false);
         meshes.SetActive(true);
         IsIdle = true;
         IsFalling = false;
