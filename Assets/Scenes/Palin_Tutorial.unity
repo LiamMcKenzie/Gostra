@@ -6576,7 +6576,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press any key to begin
+  m_text: '
+
+    Space to run | Left and right arrows to balance
+
+    Press any key
+    to begin'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 15ddc9d0f2a4b4060beaccacab6fc354, type: 2}
   m_sharedMaterial: {fileID: 3292700935834244862, guid: 15ddc9d0f2a4b4060beaccacab6fc354,
@@ -6604,10 +6609,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80.5
-  m_fontSizeBase: 36
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 120
   m_fontStyle: 0
@@ -6620,7 +6625,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
