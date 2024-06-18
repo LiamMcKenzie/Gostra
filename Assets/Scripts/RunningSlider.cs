@@ -159,6 +159,7 @@ public class RunningSlider : MonoBehaviour
         float low = targetPosition - targetRange / 2;
         float high = targetPosition + targetRange / 2;
         increasing = false;
+
         if (slider.value >= low && slider.value <= high)
         {
             if (player != null)
