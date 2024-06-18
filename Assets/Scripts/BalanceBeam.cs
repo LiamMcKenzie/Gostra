@@ -56,12 +56,10 @@ public class BalanceBeam : MonoBehaviour
     //Speed of slider movement
     private float speed;
     //Starting speed
-    private const float START_SPEED = .3f;
+    private const float START_SPEED = .4f;
     //Speed increase value
-    private const float SPEED_INCREASE = .1f;
+    private const float SPEED_INCREASE = .15f;
     private System.Random rand = new System.Random();
-    //Where the slider is trying to move to
-    private float target;
     //If the player has slipped off
     private bool slipped;
     //Public getter for slipped. Will be used for the animations
@@ -111,7 +109,6 @@ public class BalanceBeam : MonoBehaviour
     /// <summary>
     /// Smoothly moves the slider towards the targeted side
     /// </summary>
-    /// <param name="target">The target value</param>
     private IEnumerator Balancing()
     {
         while (!slipped)
