@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18309909, g: 0.22877076, b: 0.30664703, a: 1}
+  m_IndirectSpecularColor: {r: 0.18309917, g: 0.22877124, b: 0.30664736, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12597,7 +12597,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 267.10004, y: 0}
-  m_SizeDelta: {x: -496.2, y: 50}
+  m_SizeDelta: {x: -496.2, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5529597229646757907
 GameObject:
@@ -13805,15 +13805,15 @@ RectTransform:
   m_GameObject: {fileID: 2975983303068018480}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.8, z: 0.8}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3251300279572724743}
   m_Father: {fileID: 1973123338}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -529, y: 329}
+  m_AnchoredPosition: {x: -741.8, y: 329}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &6847556736580962372
@@ -16064,10 +16064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1751727685}
-  sliderSpeed: 0.02
-  startingSliderSpeed: 0.02
   Target: {fileID: 8164587198728049495}
-  resultText: {fileID: 7092274878382835865}
 --- !u!137 &9210306256266919353
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
