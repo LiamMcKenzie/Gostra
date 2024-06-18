@@ -37,6 +37,7 @@ public class UIPanel : MonoBehaviour
         /* call the audio manager here */
         // save soundOn to player prefs
         PlayerPrefs.SetInt("SoundOn", soundOn ? 1 : 0);
+        AudioListener.volume = soundOn ? 1f : 0f;
     }
 
     /// <summary>
