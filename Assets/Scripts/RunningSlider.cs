@@ -132,7 +132,7 @@ public class RunningSlider : MonoBehaviour
             }
             else
             {
-                slider.value -= sliderSpeed;
+                slider.value = 0;
                 if (slider.value <= 0)
                 {
                     increasing = true;
