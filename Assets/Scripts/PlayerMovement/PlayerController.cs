@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
         {
             speed = value < 0 ? 0 : value;
             TopSpeed = Mathf.Max(TopSpeed, speed);
+            UpdateAnimationSpeed();
         }
     }
 
@@ -120,6 +121,8 @@ public class PlayerController : MonoBehaviour
         PlayerFellEvent.Invoke();
     }
 
+    
+
     /// <summary>
     /// Makes the player run
     /// </summary>
@@ -160,6 +163,12 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.identity;
         animator.enabled = true;
         moveAlongSpline.ResetPosition();
+    }
+
+
+    public void UpdateAnimationSpeed()
+    {
+        animator.speed = Speed / 2;
     }
 
     /// <summary>
