@@ -99,7 +99,6 @@ public class BalanceBeam : MonoBehaviour
         Rotation = 0;
         speed = START_SPEED;
         slipped = false;
-        Application.targetFrameRate = 60;
     }
 
 
