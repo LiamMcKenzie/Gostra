@@ -52,6 +52,7 @@ public class MainManager : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         player.PlayerFellEvent.AddListener(EndGame);
         timeBeforeReset = normalResetTime;
         uIManager.ShowMeters(false);
