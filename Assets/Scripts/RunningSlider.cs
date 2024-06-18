@@ -43,7 +43,6 @@ public class RunningSlider : MonoBehaviour
     {
         get { return movementSpeed; }
     }
-    [SerializeField] private TextMeshProUGUI resultText;
 
     // Declare the coroutines so they can be stopped -JGG
     private Coroutine movementCoroutine;
@@ -70,7 +69,6 @@ public class RunningSlider : MonoBehaviour
         //Getting the range of the slider that the target covers
         targetRange = targetHeight / sliderHeight;
         movementSpeed = STARTING_MOVEMENT_SPEED;
-        resultText.text = "Movement Speed: " + movementSpeed;
         placeTarget(.8f); //Hardcoding for now
         // I moved these to StartRunningSlider() -JGG
         //movementCoroutine = StartCoroutine(Movement());
@@ -129,7 +127,6 @@ public class RunningSlider : MonoBehaviour
                     {
                         movementSpeed = 0;
                     }
-                    resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
                     increasing = false;
                 }
             }
@@ -172,7 +169,6 @@ public class RunningSlider : MonoBehaviour
             }
             
             movementSpeed += MOVEMENT_SPEED_CHANGE;
-            resultText.text = "Success! \n Movement Speed: " + movementSpeed;
         }
         else
         {
@@ -193,7 +189,6 @@ public class RunningSlider : MonoBehaviour
             {
                 movementSpeed = 0;
             }
-            resultText.text = "Failure. \n Movement Speed: " + movementSpeed;
         }
     }
 
@@ -205,7 +200,6 @@ public class RunningSlider : MonoBehaviour
         slider.value = 0;
         movementSpeed = STARTING_MOVEMENT_SPEED;
         sliderSpeed = startingSliderSpeed;
-        resultText.text = "Movement Speed: " + movementSpeed;
         increasing = true;
     }
 
