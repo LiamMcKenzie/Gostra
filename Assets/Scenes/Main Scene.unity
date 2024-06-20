@@ -6188,6 +6188,7 @@ MonoBehaviour:
   moveAlongSpline: {fileID: 1751727684}
   meshes: {fileID: 1737008192724537672}
   fallText: {fileID: 768598867}
+  flagManager: {fileID: 1637988234}
   speedReductionFactor: 0.01
   playerRotation: 0
   maxRotation: 45
