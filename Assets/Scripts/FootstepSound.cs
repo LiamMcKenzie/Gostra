@@ -27,7 +27,7 @@ public class FootstepSound : MonoBehaviour
 
     private void Update()
     {
-        if(player.IsIdle)
+        if(player.IsIdle || player.IsFalling)
         {
             timer = 0f;
             return;
