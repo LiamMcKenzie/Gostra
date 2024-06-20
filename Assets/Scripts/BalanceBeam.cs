@@ -27,6 +27,7 @@ public enum Direction
 public class BalanceBeam : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
+    [SerializeField] private FlagManager flagManager;
     //Transform of the handle
     [SerializeField] private RectTransform handleRect;
     //This is the value of the current rotation between -1 and 1
@@ -57,7 +58,7 @@ public class BalanceBeam : MonoBehaviour
     //Speed of slider movement
     private float speed;
     //Starting speed
-    private const float START_SPEED = .4f;
+    private const float START_SPEED = .7f;
     //Speed increase value
     private const float SPEED_INCREASE = .15f;
     private System.Random rand = new System.Random();
@@ -129,7 +130,7 @@ public class BalanceBeam : MonoBehaviour
                         PlayerDirection = Direction.Left;
                     }
                     //This uses an increased movement speed so the movement isn't jerky but it also doesn't take too long to get to the target
-                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed+1) * Time.fixedDeltaTime);
+                    Rotation = Mathf.MoveTowards(Rotation, (float)PlayerDirection, (speed+1) * Time.deltaTime);
                     player?.RotatePlayer(-Rotation);
                 }
                 //Otherwise it goes back to the natural slipping direction
@@ -161,7 +162,7 @@ public class BalanceBeam : MonoBehaviour
                         }
                         break;
                 }
-                Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.fixedDeltaTime);
+                Rotation = Mathf.MoveTowards(Rotation, (float)Direction, speed * Time.deltaTime);
                 player?.RotatePlayer(-Rotation);
             }
             //Rotates it towards the direction the player is leaning (or just hit a button for)
@@ -171,8 +172,11 @@ public class BalanceBeam : MonoBehaviour
             {
                 player?.Fall();
                 slipped = true;
-                fallText.text = "You lost your balance!";
+            if (flagManager.HighestFlag != FlagColour.Black)
+            {
+                fallText.text = "Lost balance!";
                 fallText.gameObject.SetActive(true);
+            }
                 //Round rotation to the nearest whole number (-1 or 1)
                 Rotation = Mathf.Round(Rotation);
             }
