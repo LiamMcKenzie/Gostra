@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private MoveAlongSpline moveAlongSpline;
     [SerializeField] private GameObject meshes;
     [SerializeField] private TextMeshProUGUI fallText;
+    [SerializeField] private FlagManager flagManager;
 
     [Header("Speed")]
     [SerializeField] private float speedReductionFactor = 0.5f; // The factor to reduce speed by
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
     public bool ReachedPole { get; private set; } = false;
     public bool IsFalling { get; private set; } = false;
     public float TopSpeed { get; private set; } = 0;
-    public float TopHeight { get; private set; } = 0;   
+    public float TopHeight { get; private set; } = 0;
 
     public float AdjustedPlayerPosY => Mathf.Max(0, PlayerPosY - playerStartPosY); // The player's adjusted Y position where the starting Y position is effectively 0
     private float PlayerPosY => playerPosition.position.y;  // The player's current Y position
@@ -121,7 +122,7 @@ public class PlayerController : MonoBehaviour
         PlayerFellEvent.Invoke();
     }
 
-    
+
 
     /// <summary>
     /// Makes the player run
@@ -139,8 +140,12 @@ public class PlayerController : MonoBehaviour
     {
         if (Speed <= speedThreshold)
         {
-            fallText.text = "Too slow!";
-            fallText.gameObject.SetActive(true);
+            if (flagManager.HighestFlag != FlagColour.Black)
+            {
+                fallText.text = "Too slow!";
+                fallText.gameObject.SetActive(true);
+            }
+
             Fall();
         }
     }

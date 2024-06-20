@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18309917, g: 0.22877124, b: 0.30664736, a: 1}
+  m_IndirectSpecularColor: {r: 0.18309909, g: 0.22877076, b: 0.30664703, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6220,6 +6220,7 @@ MonoBehaviour:
   moveAlongSpline: {fileID: 1751727684}
   meshes: {fileID: 1737008192724537672}
   fallText: {fileID: 768598867}
+  flagManager: {fileID: 1637988234}
   speedReductionFactor: 0.01
   playerRotation: 0
   maxRotation: 45
@@ -8226,6 +8227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1751727685}
+  flagManager: {fileID: 1637988234}
   handleRect: {fileID: 7308974028678402266}
   fallText: {fileID: 768598867}
 --- !u!4 &601642701987723374
