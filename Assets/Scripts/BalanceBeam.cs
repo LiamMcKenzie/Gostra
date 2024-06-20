@@ -27,6 +27,7 @@ public enum Direction
 public class BalanceBeam : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
+    [SerializeField] private FlagManager flagManager;
     //Transform of the handle
     [SerializeField] private RectTransform handleRect;
     //This is the value of the current rotation between -1 and 1
@@ -171,8 +172,11 @@ public class BalanceBeam : MonoBehaviour
             {
                 player?.Fall();
                 slipped = true;
-                fallText.text = "You lost your balance!";
+            if (flagManager.HighestFlag != FlagColour.Black)
+            {
+                fallText.text = "Lost balance!";
                 fallText.gameObject.SetActive(true);
+            }
                 //Round rotation to the nearest whole number (-1 or 1)
                 Rotation = Mathf.Round(Rotation);
             }
